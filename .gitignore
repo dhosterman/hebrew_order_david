@@ -1,0 +1,4 @@
+.DS_Store
+.coverage
+.project
+*__pycache__*
