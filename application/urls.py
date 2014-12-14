@@ -7,5 +7,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^/$', 'application.views.new'),
-    url(r'^post/$', 'application.views.post')
+    url(r'^post/$', 'application.views.post'),
+    url(r'^thank_you/$', 'application.views.thank_you')
 )
