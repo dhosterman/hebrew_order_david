@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from accounts.models import User
-from django.forms.extras.widgets import SelectDateWidget, Select
+from django.forms.extras.widgets import SelectDateWidget
 from .models import ContactDetails, PersonalDetails, OtherDetails
 
 
