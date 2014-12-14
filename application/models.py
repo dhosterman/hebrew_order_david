@@ -19,7 +19,6 @@ class ContactDetails(models.Model):
     work_phone = models.CharField(max_length=20, blank=True)
     mobile_phone = models.CharField(max_length=20, blank=True)
     fax = models.CharField(max_length=20, blank=True)
-    email = models.EmailField(max_length=254, blank=True)
     occupation = models.CharField(max_length=255, blank=True)
     business_name = models.CharField(max_length=255, blank=True)
     business_address = models.CharField(max_length=255, blank=True)

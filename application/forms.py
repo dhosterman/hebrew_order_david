@@ -20,7 +20,6 @@ class ContactDetailsForm(ModelForm):
             'work_phone',
             'mobile_phone',
             'fax',
-            'email',
             'occupation',
             'business_name',
             'business_address',
