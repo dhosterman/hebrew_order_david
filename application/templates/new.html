@@ -13,7 +13,11 @@
     <div class="container">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
-            <form action="{% url "application.views.post" %}" method="post">
+            {% if user.is_active %}
+                <form action="{% url "application.views.update" %}" method="post">
+            {% else %}
+                <form action="{% url "application.views.post" %}" method="post">
+            {% endif %}
                 {% csrf_token %}
                 {% bootstrap_form user_form %}
                 {% bootstrap_form contact_details_form %}

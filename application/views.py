@@ -8,12 +8,15 @@ from application.forms import ContactDetailsForm, PersonalDetailsForm, \
 
 # Create your views here.
 def new(request):
-    return render(request, 'new.html', {
-        'user_form': UserForm(),
-        'contact_details_form': ContactDetailsForm(),
-        'personal_details_form': PersonalDetailsForm(),
-        'other_details_form': OtherDetailsForm()
-    })
+    if request.user.is_active:
+        return redirect('application.views.show')
+    else:
+        return render(request, 'new.html', {
+            'user_form': UserForm(),
+            'contact_details_form': ContactDetailsForm(),
+            'personal_details_form': PersonalDetailsForm(),
+            'other_details_form': OtherDetailsForm()
+        })
 
 
 @login_required(login_url='/accounts/login/')
@@ -24,10 +27,37 @@ def show(request):
     other_details = user.otherdetails_set.first()
     return render(request, 'new.html', {
         'user_form': UserForm(instance=user),
-        'contact_details_form': ContactDetailsForm(initial=contact_details),
-        'personal_details_form': PersonalDetailsForm(initial=personal_details),
-        'other_details_form': OtherDetailsForm(initial=other_details)
+        'contact_details_form': ContactDetailsForm(instance=contact_details),
+        'personal_details_form': PersonalDetailsForm(instance=personal_details),
+        'other_details_form': OtherDetailsForm(instance=other_details)
     })
+
+
+@login_required(login_url='/accounts/login')
+@transaction.atomic
+def update(request):
+    user_details = request.user
+    contact_details = user_details.contactdetails_set.first()
+    personal_details = user_details.personaldetails_set.first()
+    other_details = user_details.otherdetails_set.first()
+
+    user = UserForm(request.POST, instance=user_details)
+    if user.is_valid():
+        user.save()
+
+    contact = ContactDetailsForm(request.POST, instance=contact_details)
+    if contact.is_valid():
+        contact.save()
+
+    personal = PersonalDetailsForm(request.POST, instance=personal_details)
+    if personal.is_valid():
+        personal.save()
+
+    other = OtherDetailsForm(request.POST, instance=other_details)
+    if other.is_valid():
+        other.save()
+
+    return redirect('application.views.thank_you')
 
 
 @transaction.atomic
@@ -38,8 +68,6 @@ def post(request):
         password = User.objects.make_random_password(length=8)
         user_instance.set_password(password)
         user_instance.save()
-    else:
-        print(user.errors)
 
     contact_details = ContactDetailsForm(request.POST)
     if contact_details.is_valid():

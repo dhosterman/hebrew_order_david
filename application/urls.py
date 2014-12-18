@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
     url(r'^$', 'application.views.new'),
     url(r'^post/$', 'application.views.post'),
+    url(r'^update/$', 'application.views.update'),
     url(r'^show/$', 'application.views.show'),
     url(r'^thank_you/$', 'application.views.thank_you')
 )
