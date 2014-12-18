@@ -7,15 +7,13 @@ def login_view(request):
     email = request.POST.get('login_email')
     password = request.POST.get('password')
     user = authenticate(username=email, password=password)
-    if user is not None:
+    if user:
         if user.is_active:
-            print('user is active')
             login(request, user)
-            return redirect('application.views.new')
+            return redirect('application.views.show')
         else:
             pass
     else:
-        print('user is none')
         pass
 
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 from accounts.models import User
 from application.forms import ContactDetailsForm, PersonalDetailsForm, \
     OtherDetailsForm, UserForm
@@ -12,6 +13,20 @@ def new(request):
         'contact_details_form': ContactDetailsForm(),
         'personal_details_form': PersonalDetailsForm(),
         'other_details_form': OtherDetailsForm()
+    })
+
+
+@login_required(login_url='/accounts/login/')
+def show(request):
+    user = request.user
+    contact_details = user.contactdetails_set.first()
+    personal_details = user.personaldetails_set.first()
+    other_details = user.otherdetails_set.first()
+    return render(request, 'new.html', {
+        'user_form': UserForm(instance=user),
+        'contact_details_form': ContactDetailsForm(initial=contact_details),
+        'personal_details_form': PersonalDetailsForm(initial=personal_details),
+        'other_details_form': OtherDetailsForm(initial=other_details)
     })
 
 
