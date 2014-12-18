@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
+    PermissionsMixin
 
 
 class UserManager(BaseUserManager):
@@ -27,12 +28,13 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Email address', unique=True, db_index=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -42,3 +44,6 @@ class User(AbstractBaseUser):
 
     def __unicode__(self):
         return self.email
+
+    def get_short_name(self):
+        return self.first_name
