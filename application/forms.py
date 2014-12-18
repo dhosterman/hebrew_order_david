@@ -12,6 +12,7 @@ class ContactDetailsForm(ModelForm):
             'home_city',
             'home_state',
             'home_zip',
+            'postal_same_as_home',
             'postal_address',
             'postal_city',
             'postal_state',
