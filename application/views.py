@@ -63,31 +63,48 @@ def update(request):
 @transaction.atomic
 def post(request):
     user = UserForm(request.POST)
+    submission_valid = False
     if user.is_valid():
         user_instance = user.save(commit=False)
         password = User.objects.make_random_password(length=8)
         user_instance.set_password(password)
-        user_instance.save()
+        submission_valid = True
+    else:
+        submission_valid = False
 
     contact_details = ContactDetailsForm(request.POST)
-    if contact_details.is_valid():
+    if contact_details.is_valid() and user.is_valid():
         contact_details_instance = contact_details.save(commit=False)
         contact_details_instance.user = user_instance
-        contact_details_instance.save()
+        submission_valid = True
+    else:
+        submission_valid = False
 
     personal_details = PersonalDetailsForm(request.POST)
-    if personal_details.is_valid():
+    if personal_details.is_valid() and user.is_valid():
         personal_details_instance = personal_details.save(commit=False)
         personal_details_instance.user = user_instance
-        personal_details_instance.save()
+        submission_valid = True
+    else:
+        submission_valid = False
 
     other_details = OtherDetailsForm(request.POST)
-    if other_details.is_valid():
+    if other_details.is_valid() and user.is_valid():
         other_details_instance = other_details.save(commit=False)
         other_details_instance.user = user_instance
-        other_details_instance.save()
+        submission_valid = True
+    else:
+        submission_valid = False
 
-    return redirect('application.views.thank_you')
+    if submission_valid:
+        user_instance.save()
+        contact_details_instance.save()
+        personal_details.save()
+        other_details.save()
+        return redirect('application.views.thank_you')
+
+    else:
+        return redirect('application.views.error')
 
 
 def thank_you(request):
