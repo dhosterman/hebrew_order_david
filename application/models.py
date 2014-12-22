@@ -44,10 +44,8 @@ class ContactDetails(models.Model):
 class PersonalDetails(models.Model):
     user = models.ForeignKey(User)
     date_of_birth = models.DateField()
-    city_of_birth = models.CharField(max_length=255, blank=True)
-    country_of_birth = models.CharField(max_length=255, blank=True)
-    is_jewish = models.BooleanField(default=False, blank=True)
-    is_married = models.BooleanField(default=False, blank=True)
+    city_of_birth = models.CharField(max_length=255)
+    country_of_birth = models.CharField(max_length=255)
     date_of_marriage = models.DateField(blank=True)
     wife_name = models.CharField(max_length=255, blank=True)
     wife_email = models.EmailField(max_length=254, blank=True)
