@@ -37,8 +37,6 @@ class PersonalDetailsForm(ModelForm):
             'date_of_birth',
             'city_of_birth',
             'country_of_birth',
-            'is_jewish',
-            'is_married',
             'date_of_marriage',
             'wife_name',
             'wife_email',
