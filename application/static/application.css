@@ -5,3 +5,7 @@
 .thank-you-message {
     margin-top: 200px;
 }
+
+.validation-error {
+    border-color: red;
+}

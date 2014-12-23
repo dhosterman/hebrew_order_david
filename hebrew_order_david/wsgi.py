@@ -1,5 +1,5 @@
 """
-WSGI config for bonner_poll project.
+WSGI config for hebrew_order_david project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -8,7 +8,9 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bonner_poll.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hebrew_order_david.settings")
 
 from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
+from dj_static import Cling
+
+application = Cling(get_wsgi_application())
