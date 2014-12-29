@@ -53,7 +53,7 @@ class PersonalDetails(models.Model):
     wife_mobile_phone = models.CharField(max_length=20, blank=True)
 
     def clean(self):
-        if not is_valid_tn(self.wife_mobile_phone):
+        if not is_valid_tn(self.wife_mobile_phone, blank=True):
             raise ValidationError("Wife's mobile phone must be a valid " +
                                   "phone number.")
 
