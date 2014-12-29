@@ -31,11 +31,13 @@ $(document).ready(function () {
     // ensure required fields aren't blank on submit
     $('form').submit(function (e) {
         $(requiredFields).each(function () {
-            if ($(this).val() === undefined || $(this).val() === '') {
+            var validatedElem = $(this);
+            removeError(validatedElem);
+            if (validatedElem.val() === undefined || validatedElem.val() === '') {
                 e.preventDefault();
-                addError($(this), 'This field is required.');
+                addError(validatedElem, 'This field is required.');
             } else {
-                removeError($(this));
+                removeError(validatedElem);
             }
        })
     })
@@ -66,11 +68,13 @@ function togglePostalAddress () {
 
 function addError (elem, error) {
     elem.addClass('validation-error');
-    var errorMessage = $('p').addClass('error-message');
+    var errorMessage = $('<p>').addClass('error-message');
     errorMessage.html(error);
     elem.after(errorMessage);
 }
 
 function removeError (elem) {
     elem.removeClass('validation-error');
+    errorMessage = elem.parent().find('.error-message');
+    errorMessage.remove();
 }
