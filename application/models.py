@@ -34,7 +34,7 @@ class ContactDetails(models.Model):
             raise ValidationError('Mobile phone must be a valid phone number.')
         if not is_valid_tn(self.work_phone):
             raise ValidationError('Work phone must be a valid phone number.')
-        if not is_valid_tn(self.fax):
+        if not is_valid_tn(self.fax, blank=True):
             raise ValidationError('Fax number must be a valid phone number.')
         self.postal_state = self.postal_state.upper()
         self.home_state = self.home_state.upper()
