@@ -25,10 +25,21 @@ $(document).ready(function () {
         $('#id_country_of_birth')
     ]
 
+    var requiredPhoneNumbers = [
+        $('#id_home_phone'),
+        $('#id_work_phone'),
+        $('#id_mobile_phone')
+    ]
+
+    var notRequiredPhoneNumbers = [
+        $('#id_fax'),
+        $('#id_wife_mobile_phone')
+    ]
+
     // remove html requirement from required fields for better validation
     $('input').each(function() {$(this).attr({'required': false})});
 
-    // ensure required fields aren't blank on submit
+    // ensure required fields are valid on submit
     $('form').submit(function (e) {
         $(requiredFields).each(function () {
             var validatedElem = $(this);
@@ -39,7 +50,26 @@ $(document).ready(function () {
             } else {
                 removeError(validatedElem);
             }
-       })
+        })
+
+        $(requiredPhoneNumbers).each(function () {
+            var validatedElem = $(this);
+            if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidTn(validatedElem.val()) === false) {
+                e.preventDefault();
+                addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+            }
+        })
+
+        $(notRequiredPhoneNumbers).each(function () {
+            var validatedElem = $(this);
+            if (isValidTn(validatedElem.val(), true) === false) {
+                removeError(validatedElem);
+                e.preventDefault();
+                addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+            } else {
+                removeError(validatedElem);
+            }
+        })
     })
 
     // set initial postal same as home visibility
@@ -77,4 +107,17 @@ function removeError (elem) {
     elem.removeClass('validation-error');
     errorMessage = elem.parent().find('.error-message');
     errorMessage.remove();
+}
+
+// given a tn string, return true if string matches regex or is an empty string if blank == true
+function isValidTn(tnString, blank) {
+    var regex = /^\d{3}-\d{3}-\d{4}$/;
+    var validTN = false;
+    if (tnString.match(regex) !== null) {
+        validTN = true;
+    }
+    if (blank === true && !validTN && tnString === '') {
+        validTN = true;
+    }
+    return validTN;
 }
