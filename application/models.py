@@ -6,7 +6,7 @@ from .validators import is_valid_tn
 
 # Create your models here.
 class ContactDetails(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     home_address = models.CharField(max_length=255)
     home_city = models.CharField(max_length=255)
     home_state = models.CharField(max_length=2)
@@ -42,7 +42,7 @@ class ContactDetails(models.Model):
 
 
 class PersonalDetails(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     date_of_birth = models.DateField()
     city_of_birth = models.CharField(max_length=255)
     country_of_birth = models.CharField(max_length=255)
@@ -59,7 +59,7 @@ class PersonalDetails(models.Model):
 
 
 class OtherDetails(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     previous_member_of_hodi = models.BooleanField(default=False)
     previous_lodges = models.CharField(max_length=255, blank=True)
     relatives_member_of_hodi = models.BooleanField(default=False)
