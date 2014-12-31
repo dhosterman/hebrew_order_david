@@ -1,11 +1,13 @@
 from io import BytesIO
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.models import User
-from application.forms import ContactDetailsForm, PersonalDetailsForm, \
+from .models import ContactDetails, PersonalDetails, OtherDetails
+from .forms import ContactDetailsForm, PersonalDetailsForm, \
     OtherDetailsForm, UserForm
 import xlsxwriter
 
@@ -26,9 +28,18 @@ def new(request):
 @login_required(login_url='/accounts/login/')
 def show(request):
     user = request.user
-    contact_details = user.contactdetails_set.first()
-    personal_details = user.personaldetails_set.first()
-    other_details = user.otherdetails_set.first()
+    try:
+        contact_details = user.contactdetails
+    except ObjectDoesNotExist:
+        contact_details = ContactDetails(user=user)
+    try:
+        personal_details = user.personaldetails
+    except ObjectDoesNotExist:
+        personal_details = PersonalDetails(user=user)
+    try:
+        other_details = user.otherdetails
+    except ObjectDoesNotExist:
+        other_details = OtherDetails(user=user)
     return render(request, 'new.html', {
         'user_form': UserForm(instance=user),
         'contact_details_form': ContactDetailsForm(instance=contact_details),
@@ -41,9 +52,18 @@ def show(request):
 @transaction.atomic
 def update(request):
     user_details = request.user
-    contact_details = user_details.contactdetails_set.first()
-    personal_details = user_details.personaldetails_set.first()
-    other_details = user_details.otherdetails_set.first()
+    try:
+        contact_details = user_details.contactdetails
+    except user_details.RelatedObjectDoesNotExist:
+        contact_details = ContactDetails(user=request.user)
+    try:
+        personal_details = user_details.personaldetails
+    except user_details.RelatedObjectDoesNotExist:
+        personal_details = PersonalDetails(user=request.user)
+    try:
+        other_details = user_details.otherdetails
+    except user_details.RelatedObjectDoesNotExist:
+        other_details = OtherDetails(user=request.user)
 
     user = UserForm(request.POST, instance=user_details)
     if user.is_valid():
