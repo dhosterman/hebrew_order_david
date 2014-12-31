@@ -14,9 +14,9 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             {% if user.is_active %}
-                <form action="{% url "application.views.update" %}" method="post">
+                <form action="{% url "application.views.update" %}" method="post" id="application-form">
             {% else %}
-                <form action="{% url "application.views.post" %}" method="post">
+                <form action="{% url "application.views.post" %}" method="post" id="application-form">
             {% endif %}
                 {% csrf_token %}
                 {% bootstrap_form user_form %}

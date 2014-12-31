@@ -40,7 +40,7 @@ $(document).ready(function () {
     $('input').each(function() {$(this).attr({'required': false})});
 
     // ensure required fields are valid on submit
-    $('form').submit(function (e) {
+    $('#application-form').submit(function (e) {
         $(requiredFields).each(function () {
             var validatedElem = $(this);
             removeError(validatedElem);
