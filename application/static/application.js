@@ -19,9 +19,7 @@ $(document).ready(function () {
         $('#id_date_of_birth_month'),
         $('#id_date_of_birth_day'),
         $('#id_date_of_birth_year'),
-        $('#id_city_of_birth_month'),
-        $('#id_city_of_birth_day'),
-        $('#id_city_of_birth_year'),
+        $('#id_city_of_birth'),
         $('#id_country_of_birth')
     ]
 
@@ -41,6 +39,7 @@ $(document).ready(function () {
 
     // ensure required fields are valid on submit
     $('#application-form').submit(function (e) {
+        console.log('stuff');
         $(requiredFields).each(function () {
             var validatedElem = $(this);
             removeError(validatedElem);

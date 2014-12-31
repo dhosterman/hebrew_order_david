@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate, login, logout
 def login_view(request):
     email = request.POST.get('login_email')
     password = request.POST.get('password')
-    print(email, password)
     user = authenticate(username=email, password=password)
     if user:
         if user.is_active:

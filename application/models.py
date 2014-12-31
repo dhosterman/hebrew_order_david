@@ -15,7 +15,7 @@ class ContactDetails(models.Model):
     postal_address = models.CharField(max_length=255, blank=True)
     postal_city = models.CharField(max_length=255, blank=True)
     postal_state = models.CharField(max_length=2, blank=True)
-    postal_zip = models.PositiveIntegerField(blank=True)
+    postal_zip = models.PositiveIntegerField(blank=True, null=True)
     home_phone = models.CharField(max_length=20)
     work_phone = models.CharField(max_length=20)
     mobile_phone = models.CharField(max_length=20)

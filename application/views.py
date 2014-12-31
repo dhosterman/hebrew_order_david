@@ -97,34 +97,34 @@ def post(request):
         submission_valid = False
 
     contact_details = ContactDetailsForm(request.POST)
-    if contact_details.is_valid() and user.is_valid():
+    if contact_details.is_valid() and user.is_valid() and submission_valid:
         contact_details_instance = contact_details.save(commit=False)
-        contact_details_instance.user = user_instance
         submission_valid = True
     else:
         submission_valid = False
 
     personal_details = PersonalDetailsForm(request.POST)
-    if personal_details.is_valid() and user.is_valid():
+    if personal_details.is_valid() and user.is_valid() and submission_valid:
         personal_details_instance = personal_details.save(commit=False)
-        personal_details_instance.user = user_instance
         submission_valid = True
     else:
         submission_valid = False
 
     other_details = OtherDetailsForm(request.POST)
-    if other_details.is_valid() and user.is_valid():
+    if other_details.is_valid() and user.is_valid() and submission_valid:
         other_details_instance = other_details.save(commit=False)
-        other_details_instance.user = user_instance
         submission_valid = True
     else:
         submission_valid = False
 
     if submission_valid:
         user_instance.save()
+        contact_details_instance.user = user_instance
         contact_details_instance.save()
-        personal_details.save()
-        other_details.save()
+        personal_details_instance.user = user.instance
+        personal_details_instance.save()
+        other_details_instance.user = user.instance
+        other_details_instance.save()
         return redirect('application.views.thank_you')
 
     else:
