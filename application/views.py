@@ -1,9 +1,13 @@
+from io import BytesIO
+import datetime
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
 from application.forms import ContactDetailsForm, PersonalDetailsForm, \
     OtherDetailsForm, UserForm
+import xlsxwriter
 
 
 # Create your views here.
@@ -109,3 +113,78 @@ def post(request):
 
 def thank_you(request):
     return render(request, 'thank_you.html', {})
+
+
+def export_as_excel(request):
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet()
+    date_format = workbook.add_format({'num_format': 'mm/dd/yy'})
+
+    # tuples of column names, model field names
+    columns = [
+        ('First Name', 'first_name'),
+        ('Last Name', 'last_name'),
+        ('Email', 'email'),
+        ('Home Address', 'contactdetails__home_address'),
+        ('City', 'contactdetails__home_city'),
+        ('State', 'contactdetails__home_state'),
+        ('Zip', 'contactdetails__home_zip'),
+        ('Postal Address', 'contactdetails__postal_address'),
+        ('City', 'contactdetails__postal_city'),
+        ('State', 'contactdetails__postal_state'),
+        ('Zip', 'contactdetails__postal_zip'),
+        ('Home Phone', 'contactdetails__home_phone'),
+        ('Work Phone', 'contactdetails__work_phone'),
+        ('Mobile Phone', 'contactdetails__mobile_phone'),
+        ('Fax', 'contactdetails__fax'),
+        ('Occupation', 'contactdetails__occupation'),
+        ('Business Name', 'contactdetails__business_name'),
+        ('Business Address', 'contactdetails__business_address'),
+        ('City', 'contactdetails__business_city'),
+        ('State', 'contactdetails__business_state'),
+        ('Zip', 'contactdetails__business_zip'),
+        ('Birth Date', 'personaldetails__date_of_birth'),
+        ('Birth City', 'personaldetails__city_of_birth'),
+        ('Country', 'personaldetails__country_of_birth'),
+        ('Marriage Date', 'personaldetails__date_of_marriage'),
+        ("Wife's Name", 'personaldetails__wife_name'),
+        ("Wife's Email", 'personaldetails__wife_email'),
+        ('Place of Marriage', 'personaldetails__place_of_marriage'),
+        ("Wife's Mobile Phone", 'personaldetails__wife_mobile_phone'),
+        ('Previous Member?', 'otherdetails__previous_member_of_hodi'),
+        ('Previous Lodges', 'otherdetails__previous_lodges'),
+        ('Relatives?', 'otherdetails__relatives_member_of_hodi'),
+        ('Relatives', 'otherdetails__relatives_names_and_mother_lodges'),
+        ('Other Orgs?', 'otherdetails__member_of_other_organizations'),
+        ('Other Orgs', 'otherdetails__other_organizations')
+    ]
+
+    applications = User.objects.select_related().values_list(
+        *[x[1] for x in columns])
+
+    row = 0
+    col = 0
+    for key in [x[0] for x in columns]:
+        worksheet.write(row, col, key)
+        col += 1
+    col = 0
+    row = 1
+    for application in applications:
+        for value in application:
+            if type(value) == datetime.date:
+                worksheet.write_datetime(row, col, value, date_format)
+            else:
+                worksheet.write(row, col, value)
+            col += 1
+        col = 0
+        row += 1
+
+    workbook.close()
+
+    output.seek(0)
+    mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    response = HttpResponse(output.read(), content_type=mime)
+    response['Content-Disposition'] = "attachment; filename=applications.xlsx"
+
+    return response
