@@ -3,7 +3,7 @@ import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.models import User
 from application.forms import ContactDetailsForm, PersonalDetailsForm, \
     OtherDetailsForm, UserForm
@@ -115,6 +115,12 @@ def thank_you(request):
     return render(request, 'thank_you.html', {})
 
 
+def is_staff(user):
+    return user.is_staff
+
+
+@user_passes_test(is_staff, login_url='/accounts/login')
+@login_required(login_url='/accounts/login')
 def export_as_excel(request):
     output = BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
