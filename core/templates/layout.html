@@ -23,7 +23,7 @@
         <a class="navbar-brand" href="#">Hebrew Order of David International</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
-        {% if not user.is_active and 'login' not in request.get_full_path %}
+        {% if not user.is_active and not 'login' in request.get_full_path %}
           <form class="navbar-form navbar-right" role="form" action={% url 'accounts.views.login_view' %} method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -34,7 +34,7 @@
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
           </form>
-        {% elif 'login' not in request.get_full_path or user.is_active%}
+        {% elif 'login' not in request.get_full_path or user.is_active %}
           <p class="navbar-text pull-right">Welcome back {{ user.first_name }}! <a href="{% url 'accounts.views.logout_view' %}">Logout?</a></p>
         {% endif %}
       </div><!--/.navbar-collapse -->

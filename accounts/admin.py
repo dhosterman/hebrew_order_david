@@ -24,3 +24,4 @@ class UserAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(User, UserAdmin)
+admin.site.site_header = 'Hebrew Order of David Administration'

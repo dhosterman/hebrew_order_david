@@ -11,7 +11,10 @@ def login_view(request):
     if user:
         if user.is_active:
             login(request, user)
-            return redirect('application.views.show')
+            if user.is_staff:
+                return redirect('admin:index')
+            else:
+                return redirect('application.views.show')
         else:
             pass
     else:

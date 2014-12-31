@@ -92,6 +92,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
+
+from django.contrib import messages
+
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert-success success',
+    messages.WARNING: 'alert-warning warning',
+    messages.ERROR: 'alert-danger error'
+}
+
+TEMPLATE_DIRS = (os.path.join(os.path.split(BASE_DIR)[0], 'core', 'templates'),)
+
 # for heroku deployment
 if os.environ.get('DATABASE_URL'):
     # Parse database configuration from $DATABASE_URL
