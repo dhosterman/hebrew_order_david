@@ -1,7 +1,11 @@
+import datetime
 from django.forms import ModelForm
 from accounts.models import User
 from django.forms.extras.widgets import SelectDateWidget
 from .models import ContactDetails, PersonalDetails, OtherDetails
+
+this_year = datetime.datetime.now().year
+years = [year for year in range(this_year + 1, this_year -100, -1)]
 
 
 class ContactDetailsForm(ModelForm):
@@ -45,8 +49,8 @@ class PersonalDetailsForm(ModelForm):
         ]
 
         widgets = {
-            'date_of_birth': SelectDateWidget(),
-            'date_of_marriage': SelectDateWidget()
+            'date_of_birth': SelectDateWidget(years=years),
+            'date_of_marriage': SelectDateWidget(years=years)
         }
 
 
