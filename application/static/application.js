@@ -77,10 +77,11 @@ $(document).ready(function () {
 
         $(twoCharactersRequired).each(function () {
             var validatedElem = $(this);
-            console.log(validatedElem);
-            if (validatedElem.attr('class').indexOf('validation-error') === -1 && validatedElem.val().length !== 2) {
+            if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
                 e.preventDefault();
                 addError(validatedElem, 'Please use a 2 letter state code such as: TX')
+            } else {
+                removeError(validatedElem);
             };
         })
     })
