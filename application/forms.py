@@ -5,7 +5,7 @@ from django.forms.extras.widgets import SelectDateWidget
 from .models import ContactDetails, PersonalDetails, OtherDetails
 
 this_year = datetime.datetime.now().year
-years = [year for year in range(this_year + 1, this_year -100, -1)]
+years = [year for year in range(this_year + 1, this_year - 100, -1)]
 
 
 class ContactDetailsForm(ModelForm):
