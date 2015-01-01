@@ -34,12 +34,17 @@ $(document).ready(function () {
         $('#id_wife_mobile_phone')
     ]
 
+    var twoCharactersRequired = [
+        $('#id_home_state'),
+        $('#id_business_state'),
+        $('#id_postal_state')
+    ]
+
     // remove html requirement from required fields for better validation
     $('input').each(function() {$(this).attr({'required': false})});
 
     // ensure required fields are valid on submit
     $('#application-form').submit(function (e) {
-        console.log('stuff');
         $(requiredFields).each(function () {
             var validatedElem = $(this);
             removeError(validatedElem);
@@ -68,6 +73,15 @@ $(document).ready(function () {
             } else {
                 removeError(validatedElem);
             }
+        })
+
+        $(twoCharactersRequired).each(function () {
+            var validatedElem = $(this);
+            console.log(validatedElem);
+            if (validatedElem.attr('class').indexOf('validation-error') === -1 && validatedElem.val().length !== 2) {
+                e.preventDefault();
+                addError(validatedElem, 'Please use a 2 letter state code such as: TX')
+            };
         })
     })
 
