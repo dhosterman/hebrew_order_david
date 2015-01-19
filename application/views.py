@@ -54,15 +54,15 @@ def update(request):
     user_details = request.user
     try:
         contact_details = user_details.contactdetails
-    except user_details.RelatedObjectDoesNotExist:
+    except ObjectDoesNotExist:
         contact_details = ContactDetails(user=request.user)
     try:
         personal_details = user_details.personaldetails
-    except user_details.RelatedObjectDoesNotExist:
+    except ObjectDoesNotExist:
         personal_details = PersonalDetails(user=request.user)
     try:
         other_details = user_details.otherdetails
-    except user_details.RelatedObjectDoesNotExist:
+    except ObjectDoesNotExist:
         other_details = OtherDetails(user=request.user)
 
     user = UserForm(request.POST, instance=user_details)
