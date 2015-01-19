@@ -37,6 +37,59 @@ class ApplicationViewsTests(TestCase):
             password='test'
         )
 
+        # all of this data must pass all validations in post view
+        self.valid_contact_details_data = {
+            'home_address': '123 Main St',
+            'home_city': 'Dallas',
+            'home_state': 'TX',
+            'home_zip': '12345',
+            'postal_same_as_home': 'on',
+            'postal_address': '',
+            'postal_city': '',
+            'postal_state': '',
+            'postal_zip': '',
+            'home_phone': '123-456-7890',
+            'work_phone': '123-456-7890',
+            'mobile_phone': '123-456-7890',
+            'fax': '',
+            'occupation': 'CEO',
+            'business_name': 'Business, LLC',
+            'business_address': '123 Main St',
+            'business_city': 'Dallas',
+            'business_state': 'TX',
+            'business_zip': '12345'
+        }
+
+        self.valid_personal_details_data = {
+            'date_of_birth_month': '1',
+            'date_of_birth_day': '1',
+            'date_of_birth_year': '1977',
+            'city_of_birth': 'Dallas',
+            'country_of_birth': 'USA',
+            'date_of_marriage_month': '0',
+            'date_of_marriage_day': '0',
+            'date_of_marriage_year': '0',
+            'wife_name': '',
+            'wife_email': '',
+            'place_of_marriage': '',
+            'wife_mobile_phone': '',
+        }
+
+        self.valid_other_details_data = {
+            'previous_member_of_hodi': '',
+            'previous_lodges': '',
+            'relatives_member_of_hodi': '',
+            'relatives_names_and_mother_lodges': '',
+            'member_of_other_organizations': '',
+            'other_organizations': ''
+        }
+
+        self.valid_user_details_data = {
+            'email': 'valid@valid.com',
+            'first_name': 'First',
+            'last_name': 'Last'
+        }
+
     def tearDown(self):
         self.c.logout()
 
@@ -71,4 +124,19 @@ class ApplicationViewsTests(TestCase):
         self.c.login(email=self.user.email, password='test')
         response = self.c.post(url)
         expected_url = reverse('application.views.thank_you')
+        self.assertRedirects(response, expected_url)
+
+    # a complete application requires that an applicant enters information
+    # for the User models as well as for ContactDetails, PersonalDetails,
+    # and OtherDetails. If any of these models do not have the required
+    # information, the form should not submit
+    def test_post_saves_if_all_submissions_are_valid(self):
+        valid_post_data = {}
+        valid_post_data.update(self.valid_user_details_data)
+        valid_post_data.update(self.valid_other_details_data)
+        valid_post_data.update(self.valid_contact_details_data)
+        valid_post_data.update(self.valid_personal_details_data)
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.thank_you')
+        response = self.c.post(url, valid_post_data)
         self.assertRedirects(response, expected_url)
