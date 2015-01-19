@@ -1,13 +1,17 @@
 language: python
 services:
-    - postgresql
+- postgresql
 python:
-    - "3.4.2"
-install: "pip install -r requirements.txt"
+- 3.4.2
+install: pip install -r requirements.txt
 script: python manage.py test
-
 before_script:
-# set up database
-    - psql -c 'create database hebrew_order_david;' -U postgres
-# run migrations
-    - python manage.py migrate --noinput
+- psql -c 'create database hebrew_order_david;' -U postgres
+- python manage.py migrate --noinput
+deploy:
+  provider: heroku
+  api_key:
+    secure: Hsw2r2E8s4H0VyIeqqJJkIIZg16StP4r3KIs9OD+U5GPhNy5xH4FkUgdBmm1yhMMOkpBK3q1NYe4hyB0HsRO0ac3utg+SAWymaB44gHqJ5bCrlsncUmeOh1vhzJCBHFHAqxQLhijxp5jXXJCgZ+d0OIfEP15Vjy87V4/Qn3D5pA=
+  app: immense-beyond-8311
+  on:
+    repo: dhosterman/hebrew_order_david
