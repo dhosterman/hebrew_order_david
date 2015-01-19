@@ -135,6 +135,10 @@ def thank_you(request):
     return render(request, 'thank_you.html', {})
 
 
+def error(request):
+    return render(request, 'error.html', {})
+
+
 def is_staff(user):
     return user.is_staff
 

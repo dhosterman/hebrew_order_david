@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^update/$', 'application.views.update'),
     url(r'^show/$', 'application.views.show'),
     url(r'^thank_you/$', 'application.views.thank_you'),
+    url(r'^error/$', 'application.views.error'),
     url(r'^export_excel/$', 'application.views.export_as_excel')
 )
