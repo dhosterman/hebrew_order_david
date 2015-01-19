@@ -17,18 +17,17 @@ class AccountTest(TestCase):
 
 class AccountsModelsTests(TestCase):
     def setUp(self):
-        pass
-
-    def test_create_user_creates_valid_user(self):
-        user = User.objects.create_user(
+        self.user = User.objects.create_user(
             email='test@test.com',
             first_name='first',
             last_name='last',
             password='password'
         )
-        self.assertEquals(user.is_active, True)
-        self.assertNotEqual(user.is_staff, True)
-        self.assertNotEqual(user.is_admin, True)
+
+    def test_create_user_creates_valid_user(self):
+        self.assertEquals(self.user.is_active, True)
+        self.assertNotEqual(self.user.is_staff, True)
+        self.assertNotEqual(self.user.is_admin, True)
 
     def test_create_superuser_creates_valid_superuser(self):
         superuser = User.objects.create_superuser(
@@ -49,3 +48,10 @@ class AccountsModelsTests(TestCase):
                 last_name='last',
                 password='password'
             )
+
+    def test_user_unicode_returns_email_address(self):
+        self.assertEquals(self.user.__unicode__(), 'test@test.com')
+
+    def test_user_get_short_name_returns_first_name(self):
+        self.assertEquals(self.user.get_short_name(), 'first')
+
