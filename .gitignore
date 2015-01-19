@@ -2,3 +2,4 @@
 .coverage
 .project
 *__pycache__*
+htmlcov/*
