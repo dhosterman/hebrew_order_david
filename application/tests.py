@@ -140,3 +140,43 @@ class ApplicationViewsTests(TestCase):
         expected_url = reverse('application.views.thank_you')
         response = self.c.post(url, valid_post_data)
         self.assertRedirects(response, expected_url)
+
+    def test_post_fails_if_contact_details_invalid(self):
+        invalid_post_data = {}
+        invalid_post_data.update(self.valid_user_details_data)
+        invalid_post_data.update(self.valid_other_details_data)
+        invalid_post_data.update(self.valid_contact_details_data)
+        invalid_post_data.update(self.valid_personal_details_data)
+        invalid_post_data['home_address'] = ''
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.error')
+        response = self.c.post(url, invalid_post_data)
+        self.assertRedirects(response, expected_url)
+
+    def test_post_fails_if_personal_details_invalid(self):
+        invalid_post_data = {}
+        invalid_post_data.update(self.valid_user_details_data)
+        invalid_post_data.update(self.valid_other_details_data)
+        invalid_post_data.update(self.valid_contact_details_data)
+        invalid_post_data.update(self.valid_personal_details_data)
+        invalid_post_data['date_of_birth_year'] = ''
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.error')
+        response = self.c.post(url, invalid_post_data)
+        self.assertRedirects(response, expected_url)
+
+    def test_post_fails_if_user_details_invalid(self):
+        invalid_post_data = {}
+        invalid_post_data.update(self.valid_user_details_data)
+        invalid_post_data.update(self.valid_other_details_data)
+        invalid_post_data.update(self.valid_contact_details_data)
+        invalid_post_data.update(self.valid_personal_details_data)
+        invalid_post_data['first_name'] = ''
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.error')
+        response = self.c.post(url, invalid_post_data)
+        self.assertRedirects(response, expected_url)
+
+    def test_post_fails_if_other_details_invalid(self):
+        # there are no required values for validation in this form/model yet
+        pass
