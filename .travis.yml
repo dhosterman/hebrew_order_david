@@ -1,0 +1,15 @@
+language: python
+services:
+    - postgresql
+python:
+    - "3.4.2"
+install: "pip install -r requirements.txt"
+script: python manage.py test
+
+before_script:
+# set up database
+    - psql -c 'create database hebrew_order_david;'
+# run migrations
+    - python manage.py migrate --noinput
+# collect static files
+    -python manage.py collectstatic --noinput
