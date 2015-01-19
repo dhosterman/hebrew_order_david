@@ -46,7 +46,7 @@ class PersonalDetails(models.Model):
     date_of_birth = models.DateField()
     city_of_birth = models.CharField(max_length=255)
     country_of_birth = models.CharField(max_length=255)
-    date_of_marriage = models.DateField(blank=True)
+    date_of_marriage = models.DateField(blank=True, null=True)
     wife_name = models.CharField(max_length=255, blank=True)
     wife_email = models.EmailField(max_length=254, blank=True)
     place_of_marriage = models.CharField(max_length=255, blank=True)
