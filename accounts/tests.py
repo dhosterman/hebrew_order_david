@@ -54,4 +54,3 @@ class AccountsModelsTests(TestCase):
 
     def test_user_get_short_name_returns_first_name(self):
         self.assertEquals(self.user.get_short_name(), 'first')
-
