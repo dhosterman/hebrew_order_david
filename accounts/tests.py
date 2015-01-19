@@ -13,3 +13,39 @@ class AccountTest(TestCase):
 
     def test_custom_user_model(self):
         self.assertNotEqual(self.user, None)
+
+
+class AccountsModelsTests(TestCase):
+    def setUp(self):
+        pass
+
+    def test_create_user_creates_valid_user(self):
+        user = User.objects.create_user(
+            email='test@test.com',
+            first_name='first',
+            last_name='last',
+            password='password'
+        )
+        self.assertEquals(user.is_active, True)
+        self.assertNotEqual(user.is_staff, True)
+        self.assertNotEqual(user.is_admin, True)
+
+    def test_create_superuser_creates_valid_superuser(self):
+        superuser = User.objects.create_superuser(
+            email='super@user.com',
+            first_name='first',
+            last_name='last',
+            password='password'
+        )
+        self.assertEquals(superuser.is_active, True)
+        self.assertEquals(superuser.is_staff, True)
+        self.assertEquals(superuser.is_admin, True)
+
+    def test_user_requires_email(self):
+        with self.assertRaises(ValueError):
+            User.objects.create_user(
+                email='',
+                first_name='first',
+                last_name='last',
+                password='password'
+            )
