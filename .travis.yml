@@ -8,7 +8,7 @@ script: python manage.py test
 
 before_script:
 # set up database
-    - psql -c 'create database hebrew_order_david;'
+    - psql -c 'create database hebrew_order_david;' -U postgres
 # run migrations
     - python manage.py migrate --noinput
 # collect static files
