@@ -104,12 +104,6 @@ MESSAGE_TAGS = {
 
 TEMPLATE_DIRS = (os.path.join(os.path.split(BASE_DIR)[0], 'core', 'templates'),)
 
-STATIC_ROOT = 'staticfiles'
-
-STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
-
 # for heroku deployment
 if os.environ.get('DATABASE_URL'):
     # Parse database configuration from $DATABASE_URL
@@ -118,3 +112,9 @@ if os.environ.get('DATABASE_URL'):
 
     # Honor the 'X-Forwarded-Proto' header for request.is_secure()
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    STATIC_ROOT = 'staticfiles'
+
+    STATICFILES_DIRS = (
+            os.path.join(BASE_DIR, 'static'),
+        )
