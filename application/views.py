@@ -48,7 +48,7 @@ def show(request):
     })
 
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/accounts/login/')
 @transaction.atomic
 def update(request):
     user_details = request.user
