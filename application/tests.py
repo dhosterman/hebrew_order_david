@@ -180,3 +180,20 @@ class ApplicationViewsTests(TestCase):
     def test_post_fails_if_other_details_invalid(self):
         # there are no required values for validation in this form/model yet
         pass
+
+    def test_user_must_be_logged_in_and_staff_to_export_excel(self):
+        staff_user = User.objects.create_superuser(
+            email='staff@user.com',
+            first_name='Staff',
+            last_name='User',
+            password='test',
+        )
+        url = reverse('application.views.export_as_excel')
+        expected_url = reverse('accounts.views.login_view')
+        expected_url += '?next=/application/export_excel/'
+        self.c.login(email=self.user.email, password='test')
+        response = self.c.get(url)
+        self.assertRedirects(response, expected_url)
+        self.c.login(email=staff_user.email, password='test')
+        response = self.c.get(url)
+        self.assertEqual(response.status_code, 200)
