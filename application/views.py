@@ -140,11 +140,11 @@ def error(request):
 
 
 def is_staff(user):
-    return user.is_staff
+    return user.is_staff or user.is_admin or user.is_superuser
 
 
-@user_passes_test(is_staff, login_url='/accounts/login')
-@login_required(login_url='/accounts/login')
+@user_passes_test(is_staff, login_url='/accounts/login/')
+@login_required(login_url='/accounts/login/')
 def export_as_excel(request):
     output = BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
