@@ -7,6 +7,7 @@ install: pip install -r requirements.txt
 script: python manage.py test
 before_script:
 - psql -c 'create database hebrew_order_david;' -U postgres
+- python manage.py syncdb --noinput
 - python manage.py migrate --noinput
 deploy:
   provider: heroku
@@ -15,3 +16,6 @@ deploy:
   app: immense-beyond-8311
   on:
     repo: dhosterman/hebrew_order_david
+  run:
+    - "python manage.py syncdb --noinput"
+    - "python manage.py migrate --noinput"
