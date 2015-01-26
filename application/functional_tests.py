@@ -79,8 +79,6 @@ class ApplicationFunctionalTests(StaticLiveServerTestCase):
         # the user enters a country of birth
         self.input_into('id_country_of_birth', 'USA')
 
-        import ipdb; ipdb.set_trace()
-
         # the user clicks the submit button
         button = self.browser.find_element_by_class_name('submit-application')
         button.click()
