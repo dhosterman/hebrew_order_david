@@ -190,7 +190,8 @@ def export_as_excel(request):
         ('Other Orgs', 'otherdetails__other_organizations')
     ]
 
-    applications = User.objects.select_related().values_list(
+    normal_users = User.objects.exclude(is_staff=True).exclude(is_superuser=True)
+    applications = normal_users.select_related().values_list(
         *[x[1] for x in columns])
 
     row = 0
