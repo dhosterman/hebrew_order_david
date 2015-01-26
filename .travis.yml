@@ -10,7 +10,7 @@ before_script:
 - python manage.py syncdb --noinput
 - python manage.py migrate --noinput
 after_success:
--coveralls
+- coveralls
 deploy:
   provider: heroku
   api_key:
