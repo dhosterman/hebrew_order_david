@@ -21,9 +21,9 @@ AUTH_USER_MODEL = 'accounts.User'
 SECRET_KEY = os.environ.get('SECRET_KEY', str(os.urandom(32)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('$DEBUG', 'on') == 'on'
+DEBUG = bool(os.environ.get('DEBUG', True))
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = bool(os.environ.get('DEBUG', True))
 
 ALLOWED_HOSTS = ['*']
 
@@ -106,6 +106,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.split(BASE_DIR)[0], 'core', 'templates'),)
 
 # for heroku deployment
 if os.environ.get('DATABASE_URL'):
+
     # Parse database configuration from $DATABASE_URL
     import dj_database_url
     DATABASES['default'] = dj_database_url.config()
