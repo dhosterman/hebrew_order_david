@@ -9,6 +9,8 @@ before_script:
 - psql -c 'create database hebrew_order_david;' -U postgres
 - python manage.py syncdb --noinput
 - python manage.py migrate --noinput
+after_success:
+-coveralls
 deploy:
   provider: heroku
   api_key:
