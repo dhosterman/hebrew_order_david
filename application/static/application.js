@@ -80,7 +80,7 @@ $(document).ready(function () {
             if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
                 e.preventDefault();
                 addError(validatedElem, 'Please use a 2 letter state code such as: TX')
-            } else {
+            } else if (validatedElem.val().length === 2) {
                 removeError(validatedElem);
             };
         })
