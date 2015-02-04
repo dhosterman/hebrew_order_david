@@ -125,6 +125,12 @@ def post(request):
         personal_details_instance.save()
         other_details_instance.user = user.instance
         other_details_instance.save()
+        message = "Welcome to HoD Shimon Peres! "
+        message += "If you want to view or change the information you "
+        message += "submitted, please log in using your email address "
+        message += "and the password: "
+        message += password
+        user_instance.email_user('Welcome!', message)
         return redirect('application.views.thank_you')
 
     else:
