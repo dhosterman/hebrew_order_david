@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -50,3 +52,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+    def email_user(self, subject, message, html_message=None,
+                   from_email=None, **kwargs):
+        return send_mail(
+                         subject,
+                         message,
+                         settings.EMAIL_FROM,
+                         [self.email],
+                         html_message=html_message)

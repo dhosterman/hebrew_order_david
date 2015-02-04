@@ -104,6 +104,16 @@ MESSAGE_TAGS = {
 
 TEMPLATE_DIRS = (os.path.join(os.path.split(BASE_DIR)[0], 'core', 'templates'),)
 
+# email credentials
+EMAIL_FROM = os.environ.get('EMAIL_FROM', 'test@test.com')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', None)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
+
+# for testing in development
+if not EMAIL_HOST:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # for heroku deployment
 if os.environ.get('DATABASE_URL'):
 
