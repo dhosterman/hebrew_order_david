@@ -71,14 +71,15 @@ class ApplicationViewsTests(TestCase):
             'date_of_marriage_year': '0',
             'wife_name': '',
             'wife_email': '',
-            'place_of_marriage': '',
+            'country_where_married': '',
             'wife_mobile_phone': '',
         }
 
         self.valid_other_details_data = {
-            'previous_member_of_hodi': '',
+            'sponsor': 'Tom Thumb',
+            'previous_member_of_hod': '',
             'previous_lodges': '',
-            'relatives_member_of_hodi': '',
+            'relatives_member_of_hod': '',
             'relatives_names_and_mother_lodges': '',
             'member_of_other_organizations': '',
             'other_organizations': ''
