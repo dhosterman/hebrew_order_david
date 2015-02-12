@@ -20,7 +20,8 @@ $(document).ready(function () {
         $('#id_date_of_birth_day'),
         $('#id_date_of_birth_year'),
         $('#id_city_of_birth'),
-        $('#id_country_of_birth')
+        $('#id_country_of_birth'),
+        $('#id_sponsor')
     ]
 
     var requiredPhoneNumbers = [

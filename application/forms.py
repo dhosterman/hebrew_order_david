@@ -41,10 +41,10 @@ class PersonalDetailsForm(ModelForm):
             'date_of_birth',
             'city_of_birth',
             'country_of_birth',
-            'date_of_marriage',
             'wife_name',
             'wife_email',
-            'place_of_marriage',
+            'country_where_married',
+            'date_of_marriage',
             'wife_mobile_phone'
         ]
 
@@ -58,9 +58,10 @@ class OtherDetailsForm(ModelForm):
     class Meta:
         model = OtherDetails
         fields = [
-            'previous_member_of_hodi',
+            'sponsor',
+            'previous_member_of_hod',
             'previous_lodges',
-            'relatives_member_of_hodi',
+            'relatives_member_of_hod',
             'relatives_names_and_mother_lodges',
             'member_of_other_organizations',
             'other_organizations'

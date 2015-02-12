@@ -49,7 +49,7 @@ class PersonalDetails(models.Model):
     date_of_marriage = models.DateField(blank=True, null=True)
     wife_name = models.CharField(max_length=255, blank=True)
     wife_email = models.EmailField(max_length=254, blank=True)
-    place_of_marriage = models.CharField(max_length=255, blank=True)
+    country_where_married = models.CharField(max_length=255, blank=True)
     wife_mobile_phone = models.CharField(max_length=20, blank=True)
 
     def clean(self):
@@ -60,9 +60,12 @@ class PersonalDetails(models.Model):
 
 class OtherDetails(models.Model):
     user = models.OneToOneField(User)
-    previous_member_of_hodi = models.BooleanField(default=False)
+    sponsor = models.CharField(max_length=255)
+    previous_member_of_hod = models.BooleanField(default=False,
+        verbose_name='Previous member of HOD')
     previous_lodges = models.CharField(max_length=255, blank=True)
-    relatives_member_of_hodi = models.BooleanField(default=False)
+    relatives_member_of_hod = models.BooleanField(default=False,
+        verbose_name='Relatives member of HOD')
     relatives_names_and_mother_lodges = models.TextField(blank=True)
     member_of_other_organizations = models.BooleanField(default=False)
     other_organizations = models.TextField(blank=True)
