@@ -40,6 +40,9 @@ class ContactDetails(models.Model):
         self.home_state = self.home_state.upper()
         self.business_state = self.business_state.upper()
 
+    class Meta:
+        verbose_name = 'Contact Detail'
+
 
 class PersonalDetails(models.Model):
     user = models.OneToOneField(User)
@@ -57,6 +60,9 @@ class PersonalDetails(models.Model):
             raise ValidationError("Wife's mobile phone must be a valid " +
                                   "phone number.")
 
+    class Meta:
+        verbose_name = 'Personal Detail'
+
 
 class OtherDetails(models.Model):
     user = models.OneToOneField(User)
@@ -69,3 +75,6 @@ class OtherDetails(models.Model):
     relatives_names_and_mother_lodges = models.TextField(blank=True)
     member_of_other_organizations = models.BooleanField(default=False)
     other_organizations = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = 'Other Detail'
