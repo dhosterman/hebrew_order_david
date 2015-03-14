@@ -35,8 +35,9 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Email address', unique=True, db_index=True)
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    hebrew_name = models.CharField(max_length=255, blank=True)
     joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -56,8 +57,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, html_message=None,
                    from_email=None, **kwargs):
         return send_mail(
-                         subject,
-                         message,
-                         settings.EMAIL_FROM,
-                         [self.email],
-                         html_message=html_message)
+            subject,
+            message,
+            settings.EMAIL_FROM,
+            [self.email],
+            html_message=html_message
+        )
