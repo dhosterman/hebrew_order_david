@@ -5,10 +5,12 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.forms.formsets import formset_factory
 from accounts.models import User
-from .models import ContactDetails, PersonalDetails, OtherDetails
-from .forms import ContactDetailsForm, PersonalDetailsForm, \
-    OtherDetailsForm, UserForm
+from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
+                     UserCommittee, Committee)
+from .forms import (ContactForm, PersonalForm, WifeForm, OccupationForm,
+                    ChildrenForm, HodForm, UserForm, CurrentCommitteeForm)
 import xlsxwriter
 
 
@@ -17,11 +19,18 @@ def new(request):
     if request.user.is_active:
         return redirect('application.views.show')
     else:
+        children_formset = formset_factory(ChildrenForm, extra=2)
+        current_committees_formset = formset_factory(CurrentCommitteeForm,
+                                                     extra=2)
         return render(request, 'new.html', {
             'user_form': UserForm(),
-            'contact_details_form': ContactDetailsForm(),
-            'personal_details_form': PersonalDetailsForm(),
-            'other_details_form': OtherDetailsForm()
+            'contact_form': ContactForm(),
+            'personal_form': PersonalForm(),
+            'wife_form': WifeForm(),
+            'occupation_form': OccupationForm(),
+            'children_formset': children_formset,
+            'hod_form': HodForm(),
+            'current_committees_formset': current_committees_formset
         })
 
 
@@ -29,7 +38,7 @@ def new(request):
 def show(request):
     user = request.user
     try:
-        contact_details = user.contactdetails
+        contact = user.contactdetails
     except ObjectDoesNotExist:
         contact_details = ContactDetails(user=user)
     try:

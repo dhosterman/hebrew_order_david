@@ -20,9 +20,17 @@
             {% endif %}
                 {% csrf_token %}
                 {% bootstrap_form user_form %}
-                {% bootstrap_form contact_details_form %}
-                {% bootstrap_form personal_details_form %}
-                {% bootstrap_form other_details_form %}
+                {% bootstrap_form contact_form %}
+                {% bootstrap_form personal_form %}
+                {% bootstrap_form wife_form %}
+                {% bootstrap_form occupation_form %}
+                {% bootstrap_form hod_form %}
+                {% for committee in current_committees_formset %}
+                  {% bootstrap_form committee %}
+                {% endfor %} 
+                {% for child in children_formset %}
+                  {% bootstrap_form child %}
+                {% endfor %}
                 {% buttons %}
                     <button type="submit" class="btn btn-primary submit-application">Submit</button>
                 {% endbuttons %}
