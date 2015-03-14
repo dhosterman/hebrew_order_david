@@ -1,26 +1,26 @@
 from django.contrib import admin
 from .models import User
-from application.models import ContactDetails, PersonalDetails, OtherDetails
+from application.models import Contact, Personal, Wife
 
 
 # Register your models here.
-class ContactDetailsInline(admin.StackedInline):
-    model = ContactDetails
+class ContactInline(admin.StackedInline):
+    model = Contact
 
 
-class PersonalDetailsInline(admin.StackedInline):
-    model = PersonalDetails
+class PersonalInline(admin.StackedInline):
+    model = Personal
 
 
-class OtherDetailsInline(admin.StackedInline):
-    model = OtherDetails
+class WifeInline(admin.StackedInline):
+    model = Wife
 
 
 class UserAdmin(admin.ModelAdmin):
     inlines = [
-        ContactDetailsInline,
-        PersonalDetailsInline,
-        OtherDetailsInline
+        ContactInline,
+        PersonalInline,
+        WifeInline
     ]
 
 admin.site.register(User, UserAdmin)

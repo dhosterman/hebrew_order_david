@@ -48,11 +48,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     def get_short_name(self):
         return self.first_name
+
+    def committees(self):
+        return self.usercommittee_set.all()
 
     def email_user(self, subject, message, html_message=None,
                    from_email=None, **kwargs):
