@@ -1,5 +1,5 @@
 import datetime
-from django.forms import ModelForm
+from django.forms import ModelForm, Form, ModelMultipleChoiceField
 from accounts.models import User
 from django.forms.extras.widgets import SelectDateWidget
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
@@ -99,6 +99,11 @@ class CurrentCommitteeForm(ModelForm):
             'position',
             'years'
         ]
+
+
+class DesiredCommitteesForm(Form):
+    queryset = Committee.objects.all()
+    committee = ModelMultipleChoiceField(queryset)
 
 
 class HodForm(ModelForm):

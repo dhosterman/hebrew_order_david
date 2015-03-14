@@ -10,7 +10,8 @@ from accounts.models import User
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
                      UserCommittee, Committee)
 from .forms import (ContactForm, PersonalForm, WifeForm, OccupationForm,
-                    ChildrenForm, HodForm, UserForm, CurrentCommitteeForm)
+                    ChildrenForm, HodForm, UserForm, CurrentCommitteeForm,
+                    DesiredCommitteesForm)
 import xlsxwriter
 
 
@@ -30,7 +31,8 @@ def new(request):
             'occupation_form': OccupationForm(),
             'children_formset': children_formset,
             'hod_form': HodForm(),
-            'current_committees_formset': current_committees_formset
+            'current_committees_formset': current_committees_formset,
+            'desired_committees_form': DesiredCommitteesForm()
         })
 
 
