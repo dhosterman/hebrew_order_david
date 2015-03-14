@@ -41,7 +41,8 @@ INSTALLED_APPS = (
     'application',
     'bootstrap3',
     'accounts',
-    'core'
+    'core',
+    'djangoformsetjs'
 )
 
 MIDDLEWARE_CLASSES = (
