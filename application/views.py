@@ -20,9 +20,11 @@ def new(request):
     if request.user.is_active:
         return redirect('application.views.show')
     else:
-        children_formset = formset_factory(ChildrenForm, extra=2)
-        current_committees_formset = formset_factory(CurrentCommitteeForm,
-                                                     extra=2)
+        ChildrenFormset = formset_factory(ChildrenForm, extra=0, can_delete=True)
+        CurrentCommitteesFormset = formset_factory(CurrentCommitteeForm,
+                                                     extra=0, can_delete=True)
+        children_formset = ChildrenFormset(prefix='children')
+        current_committees_formset = CurrentCommitteesFormset(prefix='committees')
         return render(request, 'new.html', {
             'user_form': UserForm(),
             'contact_form': ContactForm(),

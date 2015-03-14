@@ -94,6 +94,16 @@ $(document).ready(function () {
     $('#id_postal_same_as_home').on('change', function () {
         togglePostalAddress();
     })
+
+    // initialize current committees formset
+    $('#current-committees-formset').formset(
+      {animateForms: true} 
+    );
+
+    // initialize children formset
+    $('#children-formset').formset(
+      {animateForms: true}
+    );
 })
 
 function togglePostalAddress () {

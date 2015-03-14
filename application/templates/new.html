@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load bootstrap3 %}
+{% load formset_tags %}
 {% block body %}
 <div class="jumbotron">
   <div class="container">
@@ -26,16 +27,64 @@
                 {% bootstrap_form occupation_form %}
                 {% bootstrap_form hod_form %}
                 {% bootstrap_form desired_committees_form %}
-                {% for committee in current_committees_formset %}
-                  {% bootstrap_form committee %}
-                {% endfor %} 
-                {% for child in children_formset %}
-                  {% bootstrap_form child %}
-                {% endfor %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary submit-application">Submit</button>
-                {% endbuttons %}
-            </form>
+
+                <div id="current-committees-formset" data-formset-prefix="{{ current_committees_formset.prefix }}">
+                  {{ current_committees_formset.management_form }}
+
+                  <div data-formset-body>
+                    {% for committee in current_committees_formset %}
+                      <div data-formset-form>
+                        {% bootstrap_form committee %}
+                        <button type="button" data-formset-delete-button>Delete form</button>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <script type="form-template" data-formset-empty-form>
+                    {% escapescript %}
+                      <div data-formset-form>
+                        {% bootstrap_form current_committees_formset.empty_form %} 
+                        <button type="button" data-formset-delete-button>Delete form</button>
+                      </div>
+                    {% endescapescript %}
+                  </script>
+
+                  <input type="button" value="Add another" data-formset-add>
+                </div>
+
+                <div id="children-formset" data-formset-prefix="{{ children_formset.prefix }}">
+                  {{ children_formset.management_form }}
+
+                  <div data-formset-body>
+                    {% for child in children_formset %}
+                      <div data-formset-form>
+                        {% bootstrap_form child %}
+                        <button type="button" data-formset-delete-button>Delete form</button>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <script type="form-template" data-formset-empty-form>
+                    {% escapescript %}
+                      <div data-formset-form>
+                        {% bootstrap_form children_formset.empty_form %} 
+                        <button type="button" data-formset-delete-button>Delete form</button>
+                      </div>
+                    {% endescapescript %}
+                  </script>
+
+                  <input type="button" value="Add another" data-formset-add>
+                </div>
+
+
+            {% for child in children_formset %}
+              {% bootstrap_form child %}
+            {% endfor %}
+
+              {% buttons %}
+                  <button type="submit" class="btn btn-primary submit-application">Submit</button>
+              {% endbuttons %}
+          </form>
         </div>
         <div class="col-sm-2"></div>
     </div>    
