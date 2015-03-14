@@ -2,15 +2,16 @@ import datetime
 from django.forms import ModelForm
 from accounts.models import User
 from django.forms.extras.widgets import SelectDateWidget
-from .models import ContactDetails, PersonalDetails, OtherDetails
+from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
+                     Committee, UserCommittee)
 
 this_year = datetime.datetime.now().year
 years = [year for year in range(this_year + 1, this_year - 100, -1)]
 
 
-class ContactDetailsForm(ModelForm):
+class ContactForm(ModelForm):
     class Meta:
-        model = ContactDetails
+        model = Contact
         fields = [
             'home_address',
             'home_city',
@@ -23,47 +24,93 @@ class ContactDetailsForm(ModelForm):
             'postal_zip',
             'home_phone',
             'work_phone',
-            'mobile_phone',
-            'fax',
-            'occupation',
-            'business_name',
-            'business_address',
-            'business_city',
-            'business_state',
-            'business_zip'
+            'mobile_phone'
         ]
 
 
-class PersonalDetailsForm(ModelForm):
+class PersonalForm(ModelForm):
     class Meta:
-        model = PersonalDetails
+        model = Personal
         fields = [
             'date_of_birth',
             'city_of_birth',
             'country_of_birth',
-            'wife_name',
-            'wife_email',
-            'country_where_married',
-            'date_of_marriage',
-            'wife_mobile_phone'
+            'married',
+            'children'
         ]
 
         widgets = {
             'date_of_birth': SelectDateWidget(years=years),
-            'date_of_marriage': SelectDateWidget(years=years)
         }
 
 
-class OtherDetailsForm(ModelForm):
+class WifeForm(ModelForm):
     class Meta:
-        model = OtherDetails
+        model = Wife
         fields = [
+            'name',
+            'hebrew_name',
+            'date_of_birth',
+            'email',
+            'mobile_phone',
+            'date_of_marriage',
+            'country_of_marriage',
+            'city_of_marriage'
+        ]
+
+        widgets = {
+            'date_of_marriage': SelectDateWidget(years=years) 
+        }
+
+
+class OccupationForm(ModelForm):
+    class Meta:
+        model = Occupation
+        fields = [
+            'occupation',
+            'business_name',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'phone'
+        ]
+
+
+class ChildrenForm(ModelForm):
+    class Meta:
+        model = Children
+        fields = [
+            'name',
+            'hebrew_name',
+            'date_of_birth'
+        ]
+
+        widgets = {
+            'date_of_birth': SelectDateWidget(years=years) 
+        }
+
+
+class CurrentCommitteeForm(ModelForm):
+    class Meta:
+        model = UserCommittee
+        fields = [
+            'committee',
+            'position',
+            'years'
+        ]
+
+
+class HodForm(ModelForm):
+    class Meta:
+        model = Hod
+        fields = [
+            'synagogue_or_temple',
             'sponsor',
+            'sponsor_phone',
             'previous_member_of_hod',
             'previous_lodges',
-            'relatives_member_of_hod',
-            'relatives_names_and_mother_lodges',
-            'member_of_other_organizations',
+            'skills_or_hobbies',
             'other_organizations'
         ]
 
@@ -74,5 +121,6 @@ class UserForm(ModelForm):
         fields = [
             'email',
             'first_name',
-            'last_name'
+            'last_name',
+            'hebrew_name'
         ]
