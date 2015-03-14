@@ -131,6 +131,7 @@ class Committee(models.Model):
 class UserCommittee(models.Model):
     user = models.ForeignKey(User)
     committee = models.ForeignKey(Committee)
+    position = models.CharField(max_length=255)
     current = models.BooleanField(default=False)
     years = models.PositiveIntegerField()
 
