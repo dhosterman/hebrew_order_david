@@ -104,6 +104,38 @@ $(document).ready(function () {
     $('#children-formset').formset(
       {animateForms: true}
     );
+
+    // only show wife section of wizard if wife is selected
+    var marriedCheckbox = $('#id_married');
+    var wifePill = $('.wife-pill');
+    var wifeTab = $('#wife-tab');
+    marriedCheckbox.on('change', function() {
+      if (marriedCheckbox.prop('checked')) {
+        wifePill.show();
+        wifeTab.show();
+      } else {
+        wifePill.hide();
+        wifeTab.hide();
+      }
+    });
+    wifePill.hide();
+    wifeTab.hide();
+
+    // only show children section of wizard if children is selected
+    var childrenCheckbox = $('#id_children');
+    var childrenPill = $('.children-pill');
+    var childrenTab = $('.childrenTab');
+    childrenCheckbox.on('change', function() {
+      if (childrenCheckbox.prop('checked')) {
+        childrenPill.show();
+        childrenTab.show();
+      } else {
+        childrenPill.hide();
+        childrenTab:hide();
+      }
+    });
+    childrenPill.hide();
+    childrenTab.hide();
 })
 
 function togglePostalAddress () {
