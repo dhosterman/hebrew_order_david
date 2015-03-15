@@ -112,14 +112,11 @@ $(document).ready(function () {
     marriedCheckbox.on('change', function() {
       if (marriedCheckbox.prop('checked')) {
         wifePill.show();
-        wifeTab.show();
       } else {
         wifePill.hide();
-        wifeTab.hide();
       }
     });
     wifePill.hide();
-    wifeTab.hide();
 
     // only show children section of wizard if children is selected
     var childrenCheckbox = $('#id_children');
@@ -128,14 +125,29 @@ $(document).ready(function () {
     childrenCheckbox.on('change', function() {
       if (childrenCheckbox.prop('checked')) {
         childrenPill.show();
-        childrenTab.show();
       } else {
         childrenPill.hide();
-        childrenTab.hide();
       }
     });
     childrenPill.hide();
-    childrenTab.hide();
+
+    // next button behavior
+    $('form').on('click', '.next', function() {
+      var activePill = $('.nav-pills > li.active');
+      var activeIndex = $('.nav-pills> li:visible').index(activePill);
+      activeIndex += 1;
+      var activePill = $($('.nav-pills > li:visible')[activeIndex])
+      activePill.find('a').trigger('click');
+    });
+    
+    // back button behavior
+    $('form').on('click', '.back', function() {
+      var activePill = $('.nav-pills > li.active');
+      var activeIndex = $('.nav-pills> li:visible').index(activePill);
+      activeIndex -= 1;
+      var activePill = $($('.nav-pills > li:visible')[activeIndex])
+      activePill.find('a').trigger('click');
+    });
 })
 
 function togglePostalAddress () {
