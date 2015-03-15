@@ -131,7 +131,7 @@ $(document).ready(function () {
         childrenTab.show();
       } else {
         childrenPill.hide();
-        childrenTab:hide();
+        childrenTab.hide();
       }
     });
     childrenPill.hide();
