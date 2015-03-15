@@ -45,45 +45,53 @@ $(document).ready(function () {
     $('input').each(function() {$(this).attr({'required': false})});
 
     // ensure required fields are valid on submit
-    $('#application-form').submit(function (e) {
+    $('#application-form').on('click', ['.next', 'a'], function (e) {
         $(requiredFields).each(function () {
             var validatedElem = $(this);
-            removeError(validatedElem);
-            if (validatedElem.val() === undefined || validatedElem.val() === '') {
-                e.preventDefault();
-                addError(validatedElem, 'This field is required.');
-            } else {
-                removeError(validatedElem);
+            if (validatedElem.is(':visible')) {
+              removeError(validatedElem);
+              if (validatedElem.val() === undefined || validatedElem.val() === '') {
+                  e.stopImmediatePropagation();
+                  addError(validatedElem, 'This field is required.');
+              } else {
+                  removeError(validatedElem);
+              }
             }
         })
 
         $(requiredPhoneNumbers).each(function () {
             var validatedElem = $(this);
-            if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidTn(validatedElem.val()) === false) {
-                e.preventDefault();
-                addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+            if (validatedElem.is(':visible')) {
+              if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidTn(validatedElem.val()) === false) {
+                  e.stopImmediatePropagation();
+                  addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+              }
             }
         })
 
         $(notRequiredPhoneNumbers).each(function () {
             var validatedElem = $(this);
-            if (isValidTn(validatedElem.val(), true) === false) {
-                removeError(validatedElem);
-                e.preventDefault();
-                addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
-            } else {
-                removeError(validatedElem);
+            if (validatedElem.is(':visible')) {
+              if (isValidTn(validatedElem.val(), true) === false) {
+                  removeError(validatedElem);
+                  e.stopImmediatePropagation();
+                  addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+              } else {
+                  removeError(validatedElem);
+              }
             }
         })
 
         $(twoCharactersRequired).each(function () {
             var validatedElem = $(this);
-            if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
-                e.preventDefault();
-                addError(validatedElem, 'Please use a 2 letter state code such as: TX')
-            } else if (validatedElem.val().length === 2) {
-                removeError(validatedElem);
-            };
+            if (validatedElem.is(':visible')) {
+              if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
+                  e.stopImmediatePropagation();
+                  addError(validatedElem, 'Please use a 2 letter state code such as: TX')
+              } else if (validatedElem.val().length === 2) {
+                  removeError(validatedElem);
+              };
+            }
         })
     })
 
