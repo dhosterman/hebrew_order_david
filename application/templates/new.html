@@ -11,82 +11,144 @@
 </div>
 
 <div class="row">
-    <div class="container">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            {% if user.is_active %}
-                <form action="{% url "application.views.update" %}" method="post" id="application-form">
-            {% else %}
-                <form action="{% url "application.views.post" %}" method="post" id="application-form">
-            {% endif %}
-                {% csrf_token %}
-                {% bootstrap_form user_form %}
-                {% bootstrap_form contact_form %}
-                {% bootstrap_form personal_form %}
-                {% bootstrap_form wife_form %}
-                {% bootstrap_form occupation_form %}
-                {% bootstrap_form hod_form %}
-                {% bootstrap_form desired_committees_form %}
-
-                <div id="current-committees-formset" data-formset-prefix="{{ current_committees_formset.prefix }}">
-                  {{ current_committees_formset.management_form }}
-
-                  <div data-formset-body>
-                    {% for committee in current_committees_formset %}
-                      <div data-formset-form>
-                        {% bootstrap_form committee %}
-                        <button type="button" data-formset-delete-button>Delete form</button>
-                      </div>
-                    {% endfor %}
-                  </div>
-
-                  <script type="form-template" data-formset-empty-form>
-                    {% escapescript %}
-                      <div data-formset-form>
-                        {% bootstrap_form current_committees_formset.empty_form %} 
-                        <button type="button" data-formset-delete-button>Delete form</button>
-                      </div>
-                    {% endescapescript %}
-                  </script>
-
-                  <input type="button" value="Add another" data-formset-add>
-                </div>
-
-                <div id="children-formset" data-formset-prefix="{{ children_formset.prefix }}">
+  <div class="container">
+    <div class="col-md-12">
+      {% if user.is_active %}
+          <form action="{% url "application.views.update" %}" method="post" id="application-form">
+      {% else %}
+          <form action="{% url "application.views.post" %}" method="post" id="application-form">
+      {% endif %}
+        {% csrf_token %}
+        <div id="rootwizard">
+          <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+              <li class="active"><a href="#personal-tab" data-toggle="tab">Personal</a></li>
+              <li><a href="#contact-tab" data-toggle="tab">Contact</a></li>
+              <li><a href="#birth-family-tab" data-toggle="tab">Birth & Family</a></li>
+              <li class="wife-pill"><a href="#wife-tab" data-toggle="tab">Wife</a></li>
+              <li class="children-pill"><a href="#children-tab" data-toggle="tab">Children</a></li>
+              <li><a href="#occupation-tab" data-toggle="tab">Occupation</a></li>
+              <li><a href="#other-tab" data-toggle="tab">Other</a></li>
+              <li><a href="#committees-tab" data-toggle="tab">Committees</a></li>
+            </ul>
+          </div>
+          <div class="tab-content col-md-9">
+            <div class="tab-pane active" id="personal-tab">
+              <h2>Personal Information</h2>
+              {% bootstrap_form user_form %}
+              {% buttons %}
+                <button type="button" class="disabled pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="contact-tab">
+              <h2>Contact Information</h2>
+              {% bootstrap_form contact_form %}
+              {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="birth-family-tab">
+              <h2>Birth & Family</h2>
+              {% bootstrap_form personal_form %}
+              {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="wife-tab">
+              <h2>Wife</h2>
+              {% bootstrap_form wife_form %}
+              {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="children-tab">
+              <h2>Children</h2>
+              
+              <div id="children-formset" data-formset-prefix="{{ children_formset.prefix }}">
                   {{ children_formset.management_form }}
 
-                  <div data-formset-body>
-                    {% for child in children_formset %}
-                      <div data-formset-form>
-                        {% bootstrap_form child %}
-                        <button type="button" data-formset-delete-button>Delete form</button>
-                      </div>
-                    {% endfor %}
-                  </div>
-
-                  <script type="form-template" data-formset-empty-form>
-                    {% escapescript %}
-                      <div data-formset-form>
-                        {% bootstrap_form children_formset.empty_form %} 
-                        <button type="button" data-formset-delete-button>Delete form</button>
-                      </div>
-                    {% endescapescript %}
-                  </script>
-
-                  <input type="button" value="Add another" data-formset-add>
+                <div data-formset-body>
+                  {% for child in children_formset %}
+                    <div data-formset-form>
+                      {% bootstrap_form child %}
+                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
+                    </div>
+                  {% endfor %}
                 </div>
 
+                <script type="form-template" data-formset-empty-form>
+                  {% escapescript %}
+                    <div data-formset-form>
+                      {% bootstrap_form children_formset.empty_form %} 
+                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
+                    </div>
+                  {% endescapescript %}
+                </script>
 
-            {% for child in children_formset %}
-              {% bootstrap_form child %}
-            {% endfor %}
-
+                <input type="button" class="btn btn-xs" value="Add another" data-formset-add>
+              </div>
               {% buttons %}
-                  <button type="submit" class="btn btn-primary submit-application">Submit</button>
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
               {% endbuttons %}
-          </form>
-        </div>
-        <div class="col-sm-2"></div>
-    </div>    
+            </div>
+            <div class="tab-pane" id="occupation-tab">
+              <h2>Occupation</h2>
+              {% bootstrap_form occupation_form %}
+              {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="other-tab">
+              <h2>Other Information</h2>
+              {% bootstrap_form hod_form %}
+              {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+                <button type="button" class="pull-right btn btn-primary submit-application">Next</button>
+              {% endbuttons %}
+            </div>
+            <div class="tab-pane" id="committees-tab">
+              <h2>Committees</h2>
+              {% bootstrap_form desired_committees_form %}
+
+              <div id="current-committees-formset" data-formset-prefix="{{ current_committees_formset.prefix }}">
+                {{ current_committees_formset.management_form }}
+
+                <div data-formset-body>
+                  {% for committee in current_committees_formset %}
+                    <div data-formset-form>
+                      {% bootstrap_form committee %}
+                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
+                    </div>
+                  {% endfor %}
+                </div>
+
+                <script type="form-template" data-formset-empty-form>
+                  {% escapescript %}
+                    <div data-formset-form>
+                      {% bootstrap_form current_committees_formset.empty_form %} 
+                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
+                    </div>
+                  {% endescapescript %}
+                </script>
+
+                <input type="button" class="btn btn-xs" value="Add another" data-formset-add>
+                {% buttons %}
+                <button type="button" class="pull-left btn btn-primary submit-application">Back</button>
+              {% endbuttons %}
+              </div>
+              {% buttons %}
+                  <button type="submit" class="pull-right btn btn-primary submit-application">Submit</button>
+              {% endbuttons %}
+            </div>
+          </div>
+      </form>
+    </div>
+  </div> 
 </div>
 {% endblock %}
