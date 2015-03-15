@@ -75,7 +75,6 @@
                   {% for child in children_formset %}
                     <div data-formset-form>
                       {% bootstrap_form child %}
-                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
                     </div>
                   {% endfor %}
                 </div>
@@ -84,7 +83,6 @@
                   {% escapescript %}
                     <div data-formset-form>
                       {% bootstrap_form children_formset.empty_form %} 
-                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
                     </div>
                   {% endescapescript %}
                 </script>
@@ -123,7 +121,6 @@
                   {% for committee in current_committees_formset %}
                     <div data-formset-form>
                       {% bootstrap_form committee %}
-                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
                     </div>
                   {% endfor %}
                 </div>
@@ -132,7 +129,6 @@
                   {% escapescript %}
                     <div data-formset-form>
                       {% bootstrap_form current_committees_formset.empty_form %} 
-                      <button type="button" class="btn btn-xs" data-formset-delete-button>Delete form</button>
                     </div>
                   {% endescapescript %}
                 </script>
