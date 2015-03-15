@@ -103,7 +103,7 @@ class CurrentCommitteeForm(ModelForm):
 
 class DesiredCommitteesForm(Form):
     queryset = Committee.objects.all()
-    committee = ModelMultipleChoiceField(queryset)
+    committee = ModelMultipleChoiceField(queryset, required=False)
 
 
 class HodForm(ModelForm):
