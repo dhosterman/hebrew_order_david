@@ -14,22 +14,22 @@
   <div class="container">
     <div class="col-md-12">
       {% if user.is_active %}
-          <form action="{% url "application.views.update" %}" method="post" id="application-form">
+          <form action="{% url "application.views.update" %}" method="post" id="application-form" novalidate>
       {% else %}
-          <form action="{% url "application.views.post" %}" method="post" id="application-form">
+          <form action="{% url "application.views.post" %}" method="post" id="application-form" novalidate>
       {% endif %}
         {% csrf_token %}
         <div id="rootwizard">
           <div class="col-md-3">
             <ul class="nav nav-pills nav-stacked">
               <li class="active"><a href="#personal-tab" data-toggle="tab">Personal</a></li>
-              <li><a href="#contact-tab" data-toggle="tab">Contact</a></li>
-              <li><a href="#birth-family-tab" data-toggle="tab">Birth & Family</a></li>
-              <li class="wife-pill"><a href="#wife-tab" data-toggle="tab">Wife</a></li>
-              <li class="children-pill"><a href="#children-tab" data-toggle="tab">Children</a></li>
-              <li><a href="#occupation-tab" data-toggle="tab">Occupation</a></li>
-              <li><a href="#other-tab" data-toggle="tab">Other</a></li>
-              <li><a href="#committees-tab" data-toggle="tab">Committees</a></li>
+              <li><a href="#contact-tab" class="inactive">Contact</a></li>
+              <li><a href="#birth-family-tab" class="inactive">Birth & Family</a></li>
+              <li class="wife-pill"><a href="#wife-tab" class="inactive">Wife</a></li>
+              <li class="children-pill"><a href="#children-tab" class="inactive">Children</a></li>
+              <li><a href="#occupation-tab" class="inactive">Occupation</a></li>
+              <li><a href="#other-tab" class="inactive">Other</a></li>
+              <li><a href="#committees-tab" class="inactive">Committees</a></li>
             </ul>
           </div>
           <div class="tab-content col-md-9">

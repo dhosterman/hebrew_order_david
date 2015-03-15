@@ -12,10 +12,10 @@ $(document).ready(function () {
         $('#id_mobile_phone'),
         $('#id_occupation'),
         $('#id_business_name'),
-        $('#id_business_address'),
-        $('#id_business_city'),
-        $('#id_business_state'),
-        $('#id_business_zip'),
+        $('#id_address'),
+        $('#id_city'),
+        $('#id_state'),
+        $('#id_zip'),
         $('#id_date_of_birth_month'),
         $('#id_date_of_birth_day'),
         $('#id_date_of_birth_year'),
@@ -31,69 +31,88 @@ $(document).ready(function () {
     ]
 
     var notRequiredPhoneNumbers = [
-        $('#id_fax'),
-        $('#id_wife_mobile_phone')
     ]
 
     var twoCharactersRequired = [
         $('#id_home_state'),
-        $('#id_business_state'),
+        $('#id_state'),
         $('#id_postal_state')
     ]
+
+    function runValidators (e, scope) {
+      var valid = true;
+      $(requiredFields).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  removeError(validatedElem);
+                  if (validatedElem.val() === undefined || validatedElem.val() === '') {
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'This field is required.');
+                  } else {
+                      removeError(validatedElem);
+                  }
+                }
+            })
+
+            $(requiredPhoneNumbers).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidTn(validatedElem.val()) === false) {
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+                  }
+                }
+            })
+
+            $(notRequiredPhoneNumbers).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  if (isValidTn(validatedElem.val(), true) === false) {
+                      removeError(validatedElem);
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
+                  } else {
+                      removeError(validatedElem);
+                  }
+                }
+            })
+
+            $(twoCharactersRequired).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'Please use a 2 letter state code such as: TX')
+                  } else if (validatedElem.val().length === 2) {
+                      removeError(validatedElem);
+                  };
+                }
+            })
+      if (scope === 'all' && !valid) {
+        alert('Validation error. Please review all fields and try again.');
+      }
+    }
 
     // remove html requirement from required fields for better validation
     $('input').each(function() {$(this).attr({'required': false})});
 
-    // ensure required fields are valid on submit
-    $('#application-form').on('click', ['.next', 'a'], function (e) {
-        $(requiredFields).each(function () {
-            var validatedElem = $(this);
-            if (validatedElem.is(':visible')) {
-              removeError(validatedElem);
-              if (validatedElem.val() === undefined || validatedElem.val() === '') {
-                  e.stopImmediatePropagation();
-                  addError(validatedElem, 'This field is required.');
-              } else {
-                  removeError(validatedElem);
-              }
-            }
-        })
+    // ensure visible fields are valid on next
+    $('#application-form').on('click', '.next', function (e) {
+      runValidators(e, 'visible');      
+    });
 
-        $(requiredPhoneNumbers).each(function () {
-            var validatedElem = $(this);
-            if (validatedElem.is(':visible')) {
-              if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidTn(validatedElem.val()) === false) {
-                  e.stopImmediatePropagation();
-                  addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
-              }
-            }
-        })
-
-        $(notRequiredPhoneNumbers).each(function () {
-            var validatedElem = $(this);
-            if (validatedElem.is(':visible')) {
-              if (isValidTn(validatedElem.val(), true) === false) {
-                  removeError(validatedElem);
-                  e.stopImmediatePropagation();
-                  addError(validatedElem, 'Please use a phone number in the format: 123-456-7890.')
-              } else {
-                  removeError(validatedElem);
-              }
-            }
-        })
-
-        $(twoCharactersRequired).each(function () {
-            var validatedElem = $(this);
-            if (validatedElem.is(':visible')) {
-              if (validatedElem.attr('class').indexOf('validation-error') === -1 && $.inArray(validatedElem.val().length, [0, 2]) === -1) {
-                  e.stopImmediatePropagation();
-                  addError(validatedElem, 'Please use a 2 letter state code such as: TX')
-              } else if (validatedElem.val().length === 2) {
-                  removeError(validatedElem);
-              };
-            }
-        })
-    })
+    // ensure fields are validated on submission
+    $('#application-form').on('click', '.submit-application', function (e) {
+      runValidators(e, 'all');
+    });
 
     // set initial postal same as home visibility
     togglePostalAddress();
@@ -145,7 +164,7 @@ $(document).ready(function () {
       var activeIndex = $('.nav-pills> li:visible').index(activePill);
       activeIndex += 1;
       var activePill = $($('.nav-pills > li:visible')[activeIndex])
-      activePill.find('a').trigger('click');
+      activePill.find('a').removeClass('inactive').attr('data-toggle', 'tab').trigger('click');
     });
     
     // back button behavior
@@ -157,6 +176,8 @@ $(document).ready(function () {
       activePill.find('a').trigger('click');
     });
 })
+
+
 
 function togglePostalAddress () {
     var postalAddress = $('#id_postal_address, #id_postal_city, #id_postal_state, #id_postal_zip');

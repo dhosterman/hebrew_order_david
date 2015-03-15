@@ -19,3 +19,7 @@
 .navbar-brand {
     padding-top: 8px;
 }
+
+a.inactive {
+  color: gray;
+}
