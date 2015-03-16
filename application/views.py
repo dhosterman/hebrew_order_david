@@ -29,8 +29,8 @@ def new(request):
             'user_form': UserForm(),
             'contact_form': ContactForm(),
             'personal_form': PersonalForm(),
-            'wife_form': WifeForm(),
-            'occupation_form': OccupationForm(),
+            'wife_form': WifeForm(prefix="wife"),
+            'occupation_form': OccupationForm(prefix="occupation"),
             'children_formset': children_formset,
             'hod_form': HodForm(),
             'current_committees_formset': current_committees_formset,
@@ -64,36 +64,52 @@ def show(request):
 @login_required(login_url='/accounts/login/')
 @transaction.atomic
 def update(request):
-    user_details = request.user
+    user_instance = request.user
     try:
-        contact_details = user_details.contactdetails
+        contact_instance = user.contact
     except ObjectDoesNotExist:
-        contact_details = ContactDetails(user=request.user)
+        contact_instance = Contact(user=request.user)
     try:
-        personal_details = user_details.personaldetails
+        personal_instance = user.personal
     except ObjectDoesNotExist:
-        personal_details = PersonalDetails(user=request.user)
+        personal_instance = Personal(user=request.user)
     try:
-        other_details = user_details.otherdetails
+        wife_instance = user.wife
     except ObjectDoesNotExist:
-        other_details = OtherDetails(user=request.user)
+        wife_instance = Wife(user=request.user)
+    try:
+        occupation_instance = user.occupation
+    except ObjectDoesNotExist:
+        occupation_instance = Occupation(user=request.user)
+    try:
+        hod_instance = user.hod
+    except ObjectDoesNotExist:
+        hod_instance = Hod(user=request.user)
 
-    user = UserForm(request.POST, instance=user_details)
+    user = UserForm(request.POST, instance=user_instance)
     if user.is_valid():
         user.save()
 
-    contact = ContactDetailsForm(request.POST, instance=contact_details)
+    contact = ContactForm(request.POST, instance=contact_instance)
     if contact.is_valid():
         contact.save()
 
-    personal = PersonalDetailsForm(request.POST, instance=personal_details)
+    personal = PersonalForm(request.POST, instance=personal_instance)
     if personal.is_valid():
         personal.save()
 
-    other = OtherDetailsForm(request.POST, instance=other_details)
-    if other.is_valid():
-        other.save()
-
+    wife = WifeForm(request.POST, instance=wife_instance)
+    if wife.is_valid():
+        wife.save()
+    
+    occupation = OccupationForm(request.POST, instance=occupation_instance)
+    if occupation.is_valid():
+        occupation.save()
+    
+    hod = HodForm(request.POST, instance=hod_instance)
+    if hod.is_valid():
+        hod.save()
+    
     return redirect('application.views.thank_you')
 
 
@@ -107,37 +123,80 @@ def post(request):
         user_instance.set_password(password)
         submission_valid = True
     else:
+        print('user')
+        print(user.errors)
         submission_valid = False
 
-    contact_details = ContactDetailsForm(request.POST)
-    if contact_details.is_valid() and user.is_valid() and submission_valid:
-        contact_details_instance = contact_details.save(commit=False)
+    contact = ContactForm(request.POST)
+    if contact.is_valid() and user.is_valid() and submission_valid:
+        contact_instance = contact.save(commit=False)
         submission_valid = True
     else:
+        print('contact')
+        print(contact.errors)
         submission_valid = False
 
-    personal_details = PersonalDetailsForm(request.POST)
-    if personal_details.is_valid() and user.is_valid() and submission_valid:
-        personal_details_instance = personal_details.save(commit=False)
+    personal = PersonalForm(request.POST)
+    if personal.is_valid() and user.is_valid() and submission_valid:
+        personal_instance = personal.save(commit=False)
         submission_valid = True
     else:
+        print('personal')
+        print(personal.errors)
         submission_valid = False
 
-    other_details = OtherDetailsForm(request.POST)
-    if other_details.is_valid() and user.is_valid() and submission_valid:
-        other_details_instance = other_details.save(commit=False)
+    wife = WifeForm(request.POST, prefix='wife')
+    if wife.is_valid() and user.is_valid() and submission_valid:
+        wife_instance = wife.save(commit=False)
         submission_valid = True
     else:
+        print('wife')
+        print(wife.errors)
+        submission_valid = False
+
+    occupation = OccupationForm(request.POST, prefix='occupation')
+    if occupation.is_valid() and user.is_valid() and submission_valid:
+        occupation_instance = occupation.save(commit=False)
+        submission_valid = True
+    else:
+        print('occupation')
+        print(occupation.errors)
+        submission_valid = False
+
+    hod = HodForm(request.POST)
+    if hod.is_valid() and user.is_valid() and submission_valid:
+        hod_instance = hod.save(commit=False)
+        submission_valid = True
+    else:
+        print('hod')
+        print(hod.errors)
+        submission_valid = False
+
+    ChildrenFormset = formset_factory(ChildrenForm)
+    children_formset = ChildrenFormset(request.POST, prefix='children')
+    if children_formset.is_valid() and user.is_valid() and submission_valid:
+        submission_valid = True
+    else:
+        print('children')
+        print(children_formset.errors)
         submission_valid = False
 
     if submission_valid:
-        user_instance.save()
-        contact_details_instance.user = user_instance
-        contact_details_instance.save()
-        personal_details_instance.user = user.instance
-        personal_details_instance.save()
-        other_details_instance.user = user.instance
-        other_details_instance.save()
+        user.save()
+        contact_instance.user = user_instance
+        contact_instance.save()
+        personal_instance.user = user.instance
+        personal_instance.save()
+        wife_instance.user = user.instance
+        wife_instance.save()
+        occupation_instance.user = user.instance
+        occupation_instance.save()
+        hod_instance.user = user.instance
+        hod_instance.save()
+        for child in children_formset:
+            child_instance = child.save(commit=False)
+            child_instance.user = user_instance
+            child_instance.save()
         message = "Welcome to HoD Shimon Peres! "
         message += "If you want to view or change the information you "
         message += "submitted, please log in using your email address "

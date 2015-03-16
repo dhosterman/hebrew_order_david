@@ -58,7 +58,7 @@ class Wife(models.Model):
     hebrew_name = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True)
-    mobile_phone = models.CharField(max_length=20, blank=True)
+    mobile_phone = models.CharField(max_length=20, blank=True, null=True)
     date_of_marriage = models.DateField(null=True, blank=True)
     country_of_marriage = models.CharField(max_length=255, blank=True)
     city_of_marriage = models.CharField(max_length=255, blank=True)
@@ -68,6 +68,7 @@ class Wife(models.Model):
 
     def clean(self):
         if not is_valid_tn(self.mobile_phone, blank=True):
+            print(self.mobile_phone)
             raise ValidationError('Mobile phone must be a valid phone number.')
 
 
@@ -79,7 +80,7 @@ class Occupation(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=2)
     zip = models.PositiveIntegerField()
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=True)
 
     def clean(self):
         if not is_valid_tn(self.phone, blank=True):
@@ -93,8 +94,8 @@ class Occupation(models.Model):
 class Children(models.Model):
     user = models.ForeignKey(User)
     name = models.CharField(max_length=255)
-    hebrew_name = models.CharField(max_length=255)
-    date_of_birth = models.DateField()
+    hebrew_name = models.CharField(max_length=255, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.name + ' '+ self.user.last_name
