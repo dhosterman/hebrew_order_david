@@ -56,10 +56,10 @@ class Wife(models.Model):
     user = models.OneToOneField(User)
     name = models.CharField(max_length=255, blank=True)
     hebrew_name = models.CharField(max_length=255, blank=True)
-    date_of_birth = models.DateField(null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True)
     mobile_phone = models.CharField(max_length=20, blank=True)
-    date_of_marriage = models.DateField(blank=True)
+    date_of_marriage = models.DateField(null=True, blank=True)
     country_of_marriage = models.CharField(max_length=255, blank=True)
     city_of_marriage = models.CharField(max_length=255, blank=True)
 
