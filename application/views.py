@@ -21,9 +21,9 @@ def new(request):
     if request.user.is_active:
         return redirect('application.views.show')
     else:
-        ChildrenFormset = formset_factory(ChildrenForm, extra=1, can_delete=True)
+        ChildrenFormset = formset_factory(ChildrenForm, extra=0, can_delete=True)
         CurrentCommitteesFormset = formset_factory(CurrentCommitteeForm,
-                                                     extra=1, can_delete=True)
+                                                     extra=0, can_delete=True)
         children_formset = ChildrenFormset(prefix='children')
         current_committees_formset = CurrentCommitteesFormset(prefix='committees')
         return render(request, 'new.html', {
@@ -64,11 +64,11 @@ def show(request):
         hod = user.hod
     except ObjectDoesNotExist:
         hod = Hod(user=user)
-    ChildrenFormset = modelformset_factory(Children, extra=1, can_delete=True,
+    ChildrenFormset = modelformset_factory(Children, extra=0, can_delete=True,
                                            exclude=['user'])
     children = user.children_set.all().values()
     CurrentCommitteesFormset = modelformset_factory(UserCommittee,
-                                                    extra=1, can_delete=True,
+                                                    extra=0, can_delete=True,
                                                     exclude=['user', 'current'])
     committees = user.usercommittee_set.all().values()
     children_formset = ChildrenFormset(prefix='children', initial=children)
