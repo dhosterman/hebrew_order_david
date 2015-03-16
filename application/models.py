@@ -67,7 +67,7 @@ class Wife(models.Model):
         return self.user.email
 
     def clean(self):
-        if not is_valid_tn(self.mobile_phone):
+        if not is_valid_tn(self.mobile_phone, blank=True):
             raise ValidationError('Mobile phone must be a valid phone number.')
 
 
@@ -82,7 +82,7 @@ class Occupation(models.Model):
     phone = models.CharField(max_length=20)
 
     def clean(self):
-        if not is_valid_tn(self.phone):
+        if not is_valid_tn(self.phone, blank=True):
             raise ValidationError('Phone must be a valid phone number.')
         self.state = self.state.upper()
 
@@ -104,7 +104,7 @@ class Hod(models.Model):
     user = models.OneToOneField(User)
     synagogue_or_temple = models.CharField(max_length=255, blank=True)
     sponsor = models.CharField(max_length=255)
-    sponsor_phone = models.CharField(max_length=20)
+    sponsor_phone = models.CharField(max_length=20, blank=True)
     previous_member_of_hod = models.BooleanField(default=False,
         verbose_name='Previous member of HOD')
     previous_lodges = models.CharField(max_length=255, blank=True)
@@ -112,7 +112,7 @@ class Hod(models.Model):
     other_organizations = models.TextField(blank=True)
     
     def clean(self):
-        if not is_valid_tn(self.sponsor_phone):
+        if not is_valid_tn(self.sponsor_phone, blank=True):
             raise ValidationError('Sponsor phone must be a valid phone number.')
 
     def __str__(self):
