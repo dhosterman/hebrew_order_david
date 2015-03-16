@@ -59,7 +59,8 @@ class WifeForm(ModelForm):
         ]
 
         widgets = {
-            'date_of_marriage': SelectDateWidget(years=years) 
+            'date_of_marriage': SelectDateWidget(years=years),
+            'date_of_birth': SelectDateWidget(years=years)
         }
 
 
