@@ -93,7 +93,7 @@ class Occupation(models.Model):
 
 class Children(models.Model):
     user = models.ForeignKey(User)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
     hebrew_name = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
 

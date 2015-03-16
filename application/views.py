@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms.formsets import formset_factory
+from django.forms.models import modelformset_factory
 from accounts.models import User
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
                      UserCommittee, Committee)
@@ -63,17 +64,21 @@ def show(request):
         hod = user.hod
     except ObjectDoesNotExist:
         hod = Hod(user=user)
-    ChildrenFormset = formset_factory(ChildrenForm, extra=0, can_delete=True)
-    CurrentCommitteesFormset = formset_factory(CurrentCommitteeForm,
-                                                    extra=0, can_delete=True)
-    children_formset = ChildrenFormset(prefix='children')
-    current_committees_formset = CurrentCommitteesFormset(prefix='committees')   
+    ChildrenFormset = modelformset_factory(Children, extra=0, can_delete=True, exclude=['user'])
+    children = user.children_set.all().values()
+    CurrentCommitteesFormset = modelformset_factory(UserCommittee,
+                                                    extra=0, can_delete=True, exclude=['user', 'current'])
+    committees = user.usercommittee_set.all().values()
+    children_formset = ChildrenFormset(prefix='children', initial=children)
+    current_committees_formset = CurrentCommitteesFormset(prefix='committees',
+                                                          initial=committees)   
     return render(request, 'new.html', {
         'user_form': UserForm(instance=user),
         'contact_form': ContactForm(instance=contact),
         'personal_form': PersonalForm(instance=personal),
-        'wife_form': WifeForm(instance=wife),
-        'occupation_form': OccupationForm(instance=occupation),
+        'wife_form': WifeForm(instance=wife, prefix='wife'),
+        'occupation_form': OccupationForm(instance=occupation,
+                                          prefix='occupation'),
         'hod_form': HodForm(instance=hod),
         'current_committees_formset': current_committees_formset,
         'children_formset': children_formset,
@@ -88,23 +93,23 @@ def show(request):
 def update(request):
     user_instance = request.user
     try:
-        contact_instance = user.contact
+        contact_instance = user_instance.contact
     except ObjectDoesNotExist:
         contact_instance = Contact(user=request.user)
     try:
-        personal_instance = user.personal
+        personal_instance = user_instance.personal
     except ObjectDoesNotExist:
         personal_instance = Personal(user=request.user)
     try:
-        wife_instance = user.wife
+        wife_instance = user_instance.wife
     except ObjectDoesNotExist:
         wife_instance = Wife(user=request.user)
     try:
-        occupation_instance = user.occupation
+        occupation_instance = user_instance.occupation
     except ObjectDoesNotExist:
         occupation_instance = Occupation(user=request.user)
     try:
-        hod_instance = user.hod
+        hod_instance = user_instance.hod
     except ObjectDoesNotExist:
         hod_instance = Hod(user=request.user)
 
@@ -115,23 +120,54 @@ def update(request):
     contact = ContactForm(request.POST, instance=contact_instance)
     if contact.is_valid():
         contact.save()
+    else:
+        print(contact.errors)
 
     personal = PersonalForm(request.POST, instance=personal_instance)
     if personal.is_valid():
         personal.save()
 
-    wife = WifeForm(request.POST, instance=wife_instance)
+    wife = WifeForm(request.POST, instance=wife_instance, prefix='wife')
     if wife.is_valid():
         wife.save()
     
-    occupation = OccupationForm(request.POST, instance=occupation_instance)
+    occupation = OccupationForm(request.POST, instance=occupation_instance,
+                                prefix='occupation')
     if occupation.is_valid():
         occupation.save()
     
     hod = HodForm(request.POST, instance=hod_instance)
     if hod.is_valid():
         hod.save()
-    
+
+    ChildrenFormset = modelformset_factory(Children, exclude=['user'], can_delete=True)
+    children_formset = ChildrenFormset(request.POST, prefix='children')
+    if children_formset.is_valid():
+        for child in children_formset:
+            if child not in children_formset.deleted_forms:
+                child_instance = child.save(commit=False)
+                child_instance.user = user_instance
+                child_instance.save()
+        for child in children_formset.deleted_forms:
+            child_instance = child.save(commit=False)
+            child_instance.delete()
+    else:
+        print(children_formset.errors)
+        
+    CurrentCommitteesFormset = modelformset_factory(UserCommittee, exclude=['user'], can_delete=True)
+    committees_formset = CurrentCommitteesFormset(request.POST, prefix='committees')
+    if committees_formset.is_valid():
+        for committee in committees_formset:
+            if committee not in committees_formset.deleted_forms:
+                committee_instance = committee.save(commit=False)
+                committee_instance.user = user_instance
+                committee_instance.current = True
+                committee_instance.save()
+        for committee in committees_formset.deleted_forms:
+            committee_instance = committee.save(commit=False)
+            committee_instance.delete()
+    else:
+        print(committees_formset.errors)
     return redirect('application.views.thank_you')
 
 
