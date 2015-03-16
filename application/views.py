@@ -71,9 +71,11 @@ def show(request):
                                                     extra=0, can_delete=True,
                                                     exclude=['user', 'current'])
     committees = user.usercommittee_set.all().values()
-    children_formset = ChildrenFormset(prefix='children', initial=children)
+    children_formset = ChildrenFormset(prefix='children', initial=children,
+                                       queryset=user.children_set.all())
     current_committees_formset = CurrentCommitteesFormset(prefix='committees',
-                                                          initial=committees)   
+                                                          initial=committees,
+                                                          queryset=user.usercommittee_set.all())   
     return render(request, 'new.html', {
         'user_form': UserForm(instance=user),
         'contact_form': ContactForm(instance=contact),
@@ -245,6 +247,15 @@ def post(request):
         print(children_formset.errors)
         submission_valid = False
 
+    CurrentCommitteesFormset = formset_factory(CurrentCommitteeForm)
+    committees_formset = CurrentCommitteesFormset(request.POST, prefix='committees')
+    if committees_formset.is_valid() and user.is_valid() and submission_valid:
+        submission_valid = True
+    else:
+        print('committees')
+        print(committees_formset.errors)
+        submission_valid = False
+
     if submission_valid:
         user.save()
         contact_instance.user = user_instance
@@ -261,6 +272,10 @@ def post(request):
             child_instance = child.save(commit=False)
             child_instance.user = user_instance
             child_instance.save()
+        for committee in committees_formset:
+            committee_instance = committee.save(commit=False)
+            committee_instance.user = user_instance
+            committee_instance.save()
         message = "Welcome to HoD Shimon Peres! "
         message += "If you want to view or change the information you "
         message += "submitted, please log in using your email address "
