@@ -1,42 +1,46 @@
 $(document).ready(function () {
     var requiredFields = [
-        $('#id_email'),
-        $('#id_first_name'),
-        $('#id_last_name'),
-        $('#id_home_address'),
-        $('#id_home_city'),
-        $('#id_home_state'),
-        $('#id_home_zip'),
-        $('#id_home_phone'),
-        $('#id_work_phone'),
-        $('#id_mobile_phone'),
-        $('#id_occupation'),
-        $('#id_business_name'),
-        $('#id_address'),
-        $('#id_city'),
-        $('#id_state'),
-        $('#id_zip'),
-        $('#id_date_of_birth_month'),
-        $('#id_date_of_birth_day'),
-        $('#id_date_of_birth_year'),
-        $('#id_city_of_birth'),
-        $('#id_country_of_birth'),
-        $('#id_sponsor')
+      $('#id_email'),
+      $('#id_first_name'),
+      $('#id_last_name'),
+      $('#id_home_address'),
+      $('#id_home_city'),
+      $('#id_home_state'),
+      $('#id_home_zip'),
+      $('#id_home_phone'),
+      $('#id_work_phone'),
+      $('#id_mobile_phone'),
+      $('#id_occupation-occupation'),
+      $('#id_occupation-business_name'),
+      $('#id_occupation-address'),
+      $('#id_occupation-city'),
+      $('#id_occupation-state'),
+      $('#id_occupation-zip'),
+      $('#id_date_of_birth_month'),
+      $('#id_date_of_birth_day'),
+      $('#id_date_of_birth_year'),
+      $('#id_city_of_birth'),
+      $('#id_country_of_birth'),
+      $('#id_sponsor')
     ]
 
     var requiredPhoneNumbers = [
-        $('#id_home_phone'),
-        $('#id_work_phone'),
-        $('#id_mobile_phone')
+      $('#id_home_phone'),
+      $('#id_work_phone'),
+      $('#id_mobile_phone')
     ]
 
     var notRequiredPhoneNumbers = [
+      $('#id_wife-mobile_phone'),
+      $('#id_sponsor_phone'),
+      $('#id_occupation-phone')
     ]
 
     var twoCharactersRequired = [
-        $('#id_home_state'),
-        $('#id_state'),
-        $('#id_postal_state')
+      $('#id_home_state'),
+      $('#id_state'),
+      $('#id_postal_state'),
+      $('#id_occupation-state')
     ]
 
     function runValidators (e, scope) {
