@@ -41,6 +41,7 @@ def new(request):
         })
 
 
+
 @login_required(login_url='/accounts/login/')
 def show(request):
     user = request.user
