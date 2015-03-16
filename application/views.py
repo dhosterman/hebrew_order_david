@@ -34,7 +34,9 @@ def new(request):
             'children_formset': children_formset,
             'hod_form': HodForm(),
             'current_committees_formset': current_committees_formset,
-            'desired_committees_form': DesiredCommitteesForm()
+            'desired_committees_form': DesiredCommitteesForm(),
+            'pills': 'inactive',
+            'data_toggle': 'none'
         })
 
 
@@ -42,22 +44,42 @@ def new(request):
 def show(request):
     user = request.user
     try:
-        contact = user.contactdetails
+        contact = user.contact
     except ObjectDoesNotExist:
-        contact_details = ContactDetails(user=user)
+        contact = Contact(user=user)
     try:
-        personal_details = user.personaldetails
+        personal = user.personal
     except ObjectDoesNotExist:
-        personal_details = PersonalDetails(user=user)
+        personal = Personal(user=user)
     try:
-        other_details = user.otherdetails
+        wife = user.wife
     except ObjectDoesNotExist:
-        other_details = OtherDetails(user=user)
+        wife = Wife(user=user)
+    try:
+        occupation = user.occupation
+    except ObjectDoesNotExist:
+        occupation = Occupation(user=user)
+    try:
+        hod = user.hod
+    except ObjectDoesNotExist:
+        hod = Hod(user=user)
+    ChildrenFormset = formset_factory(ChildrenForm, extra=0, can_delete=True)
+    CurrentCommitteesFormset = formset_factory(CurrentCommitteeForm,
+                                                    extra=0, can_delete=True)
+    children_formset = ChildrenFormset(prefix='children')
+    current_committees_formset = CurrentCommitteesFormset(prefix='committees')   
     return render(request, 'new.html', {
         'user_form': UserForm(instance=user),
-        'contact_details_form': ContactDetailsForm(instance=contact_details),
-        'personal_details_form': PersonalDetailsForm(instance=personal_details),
-        'other_details_form': OtherDetailsForm(instance=other_details)
+        'contact_form': ContactForm(instance=contact),
+        'personal_form': PersonalForm(instance=personal),
+        'wife_form': WifeForm(instance=wife),
+        'occupation_form': OccupationForm(instance=occupation),
+        'hod_form': HodForm(instance=hod),
+        'current_committees_formset': current_committees_formset,
+        'children_formset': children_formset,
+        'desired_committees_form': DesiredCommitteesForm(),
+        'pills': 'active',
+        'data_toggle': 'tab' 
     })
 
 

@@ -147,7 +147,7 @@ $(document).ready(function () {
         wifePill.hide();
       }
     });
-    wifePill.hide();
+    if (!marriedCheckbox.prop('checked')) {wifePill.hide();}
 
     // only show children section of wizard if children is selected
     var childrenCheckbox = $('#id_children');
@@ -160,7 +160,7 @@ $(document).ready(function () {
         childrenPill.hide();
       }
     });
-    childrenPill.hide();
+    if (!childrenCheckbox.prop('checked')) {childrenPill.hide();}
 
     // next button behavior
     $('form').on('click', '.next', function() {
