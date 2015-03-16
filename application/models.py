@@ -29,7 +29,6 @@ class Contact(models.Model):
             raise ValidationError('Work phone must be a valid phone number.')
         self.postal_state = self.postal_state.upper()
         self.home_state = self.home_state.upper()
-        self.business_state = self.business_state.upper()
 
     def __str__(self):
         return self.user.email
