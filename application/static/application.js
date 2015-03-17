@@ -115,6 +115,10 @@ $(document).ready(function () {
 
     // ensure fields are validated on submission
     $('#application-form').on('click', '.submit-application', function (e) {
+      if (!$('.accept-terms').prop('checked')) {
+        e.preventDefault();
+        alert('You must accept the terms and conditions before submitting.');
+      }
       runValidators(e, 'all');
     });
 

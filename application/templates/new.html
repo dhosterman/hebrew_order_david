@@ -30,6 +30,7 @@
               <li><a href="#occupation-tab" class="{{ pills }}" data-toggle="{{ data_toggle }}">Occupation</a></li>
               <li><a href="#other-tab" class="{{ pills }}" data-toggle="{{ data_toggle }}">Other</a></li>
               <li><a href="#committees-tab" class="{{ pills }}" data-toggle="{{ data_toggle }}">Committees</a></li>
+              <li><a href="#finish-tab" class="{{ pills }}" data-toggle="{{ data_toggle }}">Finish</a></li>
             </ul>
           </div>
           <div class="tab-content col-md-9">
@@ -136,10 +137,20 @@
                 <input type="button" class="btn btn-xs" value="Add committee" data-formset-add>
                 {% buttons %}
                 <button type="button" class="pull-left btn btn-primary back">Back</button>
+                <button type="button" class="pull-right btn btn-primary next">Next</button>
               {% endbuttons %}
               </div>
+            </div>
+            <div class="tab-pane" id="finish-tab">
+              <h2>Finish</h2>
+              <h4>Terms and Conditions</h4>
+              <div class="legal">{{ legal.terms_and_conditions }}</div>
+              <h4>Privacy Policy</h4>
+              <div class="legal">{{ legal.privacy_policy }}</div>
+              <input type="checkbox" class="accept-terms"> I accept the terms and conditions. 
               {% buttons %}
-                  <button type="submit" class="pull-right btn btn-primary submit-application">Submit</button>
+                <button type="button" class="disabled pull-left btn btn-primary back">Back</button>
+                <button type="submit" class="pull-right btn btn-primary submit-application">Submit</button>
               {% endbuttons %}
             </div>
           </div>

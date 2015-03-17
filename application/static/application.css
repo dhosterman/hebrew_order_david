@@ -23,3 +23,15 @@
 a.inactive {
   color: gray;
 }
+
+.legal {
+  border: 1px solid black;
+  padding: 5%;
+  margin-bottom: 10px;
+}
+
+.back,
+.next,
+.submit-application {
+  margin-top: 10px;
+}

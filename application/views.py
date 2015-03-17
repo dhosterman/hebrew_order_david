@@ -9,7 +9,7 @@ from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
 from accounts.models import User
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
-                     UserCommittee, Committee)
+                     UserCommittee, Committee, Legal)
 from .forms import (ContactForm, PersonalForm, WifeForm, OccupationForm,
                     ChildrenForm, HodForm, UserForm, CurrentCommitteeForm,
                     DesiredCommitteesForm)
@@ -37,9 +37,9 @@ def new(request):
             'current_committees_formset': current_committees_formset,
             'desired_committees_form': DesiredCommitteesForm(),
             'pills': 'inactive',
-            'data_toggle': 'none'
+            'data_toggle': 'none',
+            'legal': Legal.objects.first()
         })
-
 
 
 @login_required(login_url='/accounts/login/')
