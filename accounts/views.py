@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+from .models import User
 
 
 # Create your views here.
@@ -23,3 +25,11 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('application.views.new')
+
+
+def existing_user(request):
+    email = request.GET.get('email')
+    if User.objects.filter(email=email).count() > 0:
+        return JsonResponse({'exists': True})
+    else:
+        return JsonResponse({'exists': False})

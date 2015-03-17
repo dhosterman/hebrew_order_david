@@ -53,6 +53,9 @@ $(document).ready(function () {
 
     function runValidators (e, scope) {
       var valid = true;
+      
+
+
       $(requiredFields).each(function () {
                 var validatedElem = $(this);
                 if (scope === 'all' || validatedElem.is(':visible')) {
@@ -135,6 +138,25 @@ $(document).ready(function () {
                   }
                 }
             })
+
+
+      // test user email address to make sure it doesn't match existing email address
+      var email = $('#id_email');
+      if (scope === 'all' || email.is(':visible')) {
+        $.ajax({
+          url: '/accounts/existing_user',
+          data: {email: email.val()},
+          async: false
+        }).done(function(data) {
+          if (data.exists) {
+            removeError(email);
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            valid = false;
+            addError(email, 'An account with this email address already exists.');
+          }
+        }) 
+      }
 
       if (scope === 'all' && !valid) {
         alert('Validation error. Please review all fields and try again.');
