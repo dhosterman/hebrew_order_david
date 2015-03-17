@@ -24,6 +24,14 @@ $(document).ready(function () {
       $('#id_sponsor')
     ]
 
+    var requiredEmailAddresses = [
+      $('#id_email')
+    ]
+
+    var notRequiredEmailAddresses = [
+      $('#id_wife-email'),
+    ]
+
     var requiredPhoneNumbers = [
       $('#id_home_phone'),
       $('#id_work_phone'),
@@ -100,6 +108,34 @@ $(document).ready(function () {
                   };
                 }
             })
+
+            $(requiredEmailAddresses).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  if (validatedElem.attr('class').indexOf('validation-error') === -1 && isValidEmail(validatedElem.val()) === false) {
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'Please use a valid email address.')
+                  }
+                }
+            })
+
+            $(notRequiredEmailAddresses).each(function () {
+                var validatedElem = $(this);
+                if (scope === 'all' || validatedElem.is(':visible')) {
+                  if (isValidEmail(validatedElem.val(), true) === false) {
+                      removeError(validatedElem);
+                      e.stopImmediatePropagation();
+                      e.preventDefault();
+                      valid = false;
+                      addError(validatedElem, 'Please use a valid email address.')
+                  } else {
+                      removeError(validatedElem);
+                  }
+                }
+            })
+
       if (scope === 'all' && !valid) {
         alert('Validation error. Please review all fields and try again.');
       }
@@ -226,4 +262,17 @@ function isValidTn(tnString, blank) {
         validTN = true;
     }
     return validTN;
+}
+
+// given an email string, return true if string matches regex or is an empty string if blank == true
+function isValidEmail(emailString, blank) {
+    var regex = /(([a-zA-Z0-9\-?\.?]+)@(([a-zA-Z0-9\-_]+\.)+)([a-z]{2,3}))+$/;
+    var validEmail = false;
+    if (emailString.match(regex) !== null) {
+        validEmail = true;
+    }
+    if (blank === true && !validEmail && emailString === '') {
+        validEmail = true;
+    }
+    return validEmail;
 }
