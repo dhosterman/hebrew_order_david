@@ -198,6 +198,40 @@ $(document).ready(function () {
       {animateForms: true}
     );
 
+    // children formset validators
+    $('#children-formset').on('formAdded', function(e) {
+      requiredFields.push($(e.target).find('.form-control[id$=name]').first());
+    })
+    
+    $('#children-formset').on('formDeleted', function(e) {
+      var nameId = $(e.target).find('.form-control[id$=name]').first().attr('id');
+      $.grep(requiredFields, function(o, i) {
+        if (o.attr('id') === nameId) {
+          delete(requiredFields[i]);
+        }
+      }) 
+      requiredFields = $.grep(requiredFields,function(n){ return(n) });
+    })
+
+    // committees formset validators
+    $('#current-committees-formset').on('formAdded', function(e) {
+      requiredFields.push($(e.target).find('.form-control[id$=committee]').first()); 
+      requiredFields.push($(e.target).find('.form-control[id$=position]').first()); 
+      requiredFields.push($(e.target).find('.form-control[id$=years]').first()); 
+    })    
+     
+    $('#current-committees-formset').on('formDeleted', function(e) {
+      var committeeId = $(e.target).find('.form-control[id$=committee]').first().attr('id');
+      var positionId = $(e.target).find('.form-control[id$=position]').first().attr('id');
+      var yearsId = $(e.target).find('.form-control[id$=years]').first().attr('id');
+      $.grep(requiredFields, function(o, i) {
+        if ([committeeId, positionId, yearsId].indexOf(o.attr('id')) >= 0) {
+          delete(requiredFields[i]); 
+        }
+      })
+      requiredFields = $.grep(requiredFields,function(n){ return(n) });
+    })
+
     // only show wife section of wizard if wife is selected
     var marriedCheckbox = $('#id_married');
     var wifePill = $('.wife-pill');

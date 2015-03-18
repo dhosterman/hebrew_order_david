@@ -130,10 +130,10 @@ class Committee(models.Model):
 
 class UserCommittee(models.Model):
     user = models.ForeignKey(User)
-    committee = models.ForeignKey(Committee)
-    position = models.CharField(max_length=255)
+    committee = models.ForeignKey(Committee, null=True)
+    position = models.CharField(max_length=255, blank=True)
     current = models.BooleanField(default=False)
-    years = models.PositiveIntegerField()
+    years = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return self.user.email + ':' + self.committee.name

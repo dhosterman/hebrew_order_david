@@ -34,7 +34,7 @@
             </ul>
           </div>
           <div class="tab-content col-md-9">
-            <div class="tab-pane active" id="personal-tab">
+            <div class="tab-pane" id="personal-tab">
               <h2>Personal Information</h2>
               {% bootstrap_form user_form %}
               {% buttons %}
@@ -111,7 +111,7 @@
                 <button type="button" class="pull-right btn btn-primary next">Next</button>
               {% endbuttons %}
             </div>
-            <div class="tab-pane" id="committees-tab">
+            <div class="tab-pane active" id="committees-tab">
               <h2>Committees</h2>
               {% bootstrap_form desired_committees_form %}
 
