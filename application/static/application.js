@@ -7,9 +7,6 @@ $(document).ready(function () {
       $('#id_home_city'),
       $('#id_home_state'),
       $('#id_home_zip'),
-      $('#id_home_phone'),
-      $('#id_work_phone'),
-      $('#id_mobile_phone'),
       $('#id_occupation-occupation'),
       $('#id_occupation-business_name'),
       $('#id_occupation-address'),
@@ -33,15 +30,15 @@ $(document).ready(function () {
     ]
 
     var requiredPhoneNumbers = [
-      $('#id_home_phone'),
-      $('#id_work_phone'),
-      $('#id_mobile_phone')
     ]
 
     var notRequiredPhoneNumbers = [
       $('#id_wife-mobile_phone'),
       $('#id_sponsor_phone'),
-      $('#id_occupation-phone')
+      $('#id_occupation-phone'),
+      $('#id_home_phone'),
+      $('#id_work_phone'),
+      $('#id_mobile_phone'),
     ]
 
     var twoCharactersRequired = [
