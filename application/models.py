@@ -16,16 +16,16 @@ class Contact(models.Model):
     postal_city = models.CharField(max_length=255, blank=True)
     postal_state = models.CharField(max_length=2, blank=True)
     postal_zip = models.PositiveIntegerField(blank=True, null=True)
-    home_phone = models.CharField(max_length=20)
-    work_phone = models.CharField(max_length=20)
-    mobile_phone = models.CharField(max_length=20)
+    home_phone = models.CharField(max_length=20, blank=True)
+    work_phone = models.CharField(max_length=20, blank=True)
+    mobile_phone = models.CharField(max_length=20, blank=True)
 
     def clean(self):
-        if not is_valid_tn(self.home_phone):
+        if not is_valid_tn(self.home_phone, blank=True):
             raise ValidationError('Home phone must be a valid phone number.')
-        if not is_valid_tn(self.mobile_phone):
+        if not is_valid_tn(self.mobile_phone, blank=True):
             raise ValidationError('Mobile phone must be a valid phone number.')
-        if not is_valid_tn(self.work_phone):
+        if not is_valid_tn(self.work_phone, blank=True):
             raise ValidationError('Work phone must be a valid phone number.')
         self.postal_state = self.postal_state.upper()
         self.home_state = self.home_state.upper()
@@ -58,7 +58,7 @@ class Wife(models.Model):
     hebrew_name = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True)
-    mobile_phone = models.CharField(max_length=20, blank=True, null=True)
+    mobile_phone = models.CharField(max_length=20, blank=True)
     date_of_marriage = models.DateField(null=True, blank=True)
     country_of_marriage = models.CharField(max_length=255, blank=True)
     city_of_marriage = models.CharField(max_length=255, blank=True)
