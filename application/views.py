@@ -330,7 +330,7 @@ def export_as_excel(request):
         ('Birth City', 'personal__city_of_birth'),
         ('Birth Country', 'personal__country_of_birth'),
         ("Wife's Name", 'wife__name'),
-        ("Wife's Hewbrew Name", 'wife__hebrew_name'),
+        ("Wife's Hebrew Name", 'wife__hebrew_name'),
         ("Wife's Birth Date", 'wife__date_of_birth'),
         ("Wife's Email", 'wife__email'),
         ("Wife's Mobile Phone", 'wife__mobile_phone'),
