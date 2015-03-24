@@ -49,8 +49,8 @@ class AccountsModelsTests(TestCase):
                 password='password'
             )
 
-    def test_user_unicode_returns_email_address(self):
-        self.assertEquals(self.user.__unicode__(), 'test@test.com')
+    def test_user_str_returns_email_address(self):
+        self.assertEquals(self.user.__str__(), 'test@test.com')
 
     def test_user_get_short_name_returns_first_name(self):
         self.assertEquals(self.user.get_short_name(), 'first')

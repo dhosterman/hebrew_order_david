@@ -38,7 +38,7 @@ class ApplicationViewsTests(TestCase):
         )
 
         # all of this data must pass all validations in post view
-        self.valid_contact_details_data = {
+        self.valid_contact_data = {
             'home_address': '123 Main St',
             'home_city': 'Dallas',
             'home_state': 'TX',
@@ -50,45 +50,69 @@ class ApplicationViewsTests(TestCase):
             'postal_zip': '',
             'home_phone': '123-456-7890',
             'work_phone': '123-456-7890',
-            'mobile_phone': '123-456-7890',
-            'fax': '',
-            'occupation': 'CEO',
-            'business_name': 'Business, LLC',
-            'business_address': '123 Main St',
-            'business_city': 'Dallas',
-            'business_state': 'TX',
-            'business_zip': '12345'
+            'mobile_phone': '123-456-7890'
         }
 
-        self.valid_personal_details_data = {
+        self.valid_personal_data = {
             'date_of_birth_month': '1',
             'date_of_birth_day': '1',
             'date_of_birth_year': '1977',
             'city_of_birth': 'Dallas',
             'country_of_birth': 'USA',
-            'date_of_marriage_month': '0',
-            'date_of_marriage_day': '0',
-            'date_of_marriage_year': '0',
-            'wife_name': '',
-            'wife_email': '',
-            'country_where_married': '',
-            'wife_mobile_phone': '',
+            'married': 'on',
+            'children': 'on'
         }
 
-        self.valid_other_details_data = {
+        self.valid_wife_data = {
+            'name': 'Martha Smith',
+            'hebrew_name': 'Hebrew Smith',
+            'date_of_birth_month': '1',
+            'date_of_birth_day': '1',
+            'date_of_birth_year': '1977',
+            'date_of_marriage_month': '1',
+            'date_of_marriage_day': '1',
+            'date_of_marriage_year': '1980',
+            'email': 'wife@email.com',
+            'country_of_marriage': 'USA',
+            'city_of_marriage': 'Chicago',
+            'mobile_phone': '123-456-7890',
+        }
+
+        self.valid_occupation_data = {
+            'occupation-occupation': 'Carpenter',
+            'occupation-business_name': 'Carpenters, Inc.',
+            'occupation-address': '123 Main St',
+            'occupation-city': 'Dallas',
+            'occupation-state': 'TX',
+            'occupation-zip': '12345',
+            'occupation-phone': '123-456-7890'
+        }
+
+        self.valid_hod_data = {
+            'synagogue_or_temple': 'Synagogue',
             'sponsor': 'Tom Thumb',
+            'sponsor_phone': '123-456-7890',
             'previous_member_of_hod': '',
             'previous_lodges': '',
-            'relatives_member_of_hod': '',
-            'relatives_names_and_mother_lodges': '',
-            'member_of_other_organizations': '',
+            'skills_or_hobbies': '',
             'other_organizations': ''
         }
 
-        self.valid_user_details_data = {
+        self.valid_user_data = {
             'email': 'valid@valid.com',
             'first_name': 'First',
             'last_name': 'Last'
+        }
+
+        self.valid_formset_management = {
+            'children-TOTAL_FORMS': 0,
+            'children-INITIAL_FORMS': 0,
+            'children-MIN_NUM_FORMS': 0,
+            'children-MAX_NUM_FORMS': 0,
+            'committees-TOTAL_FORMS': 0,
+            'committees-INITIAL_FORMS': 0,
+            'committees-MIN_NUM_FORMS': 0,
+            'committees-MAX_NUM_FORMS': 0
         }
 
     def tearDown(self):
@@ -116,71 +140,109 @@ class ApplicationViewsTests(TestCase):
         response = self.c.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_user_must_be_logged_in_to_view_upate(self):
+    def test_user_must_be_logged_in_to_view_update(self):
         url = reverse('application.views.update')
-        response = self.c.post(url)
+        response = self.c.post(url, self.valid_formset_management)
         expected_url = reverse('accounts.views.login_view')
         expected_url += '?next=/application/update/'
         self.assertRedirects(response, expected_url)
         self.c.login(email=self.user.email, password='test')
-        response = self.c.post(url)
+        response = self.c.post(url, self.valid_formset_management)
         expected_url = reverse('application.views.thank_you')
         self.assertRedirects(response, expected_url)
 
     # a complete application requires that an applicant enters information
-    # for the User models as well as for ContactDetails, PersonalDetails,
+    # for the User models as well as for ContactDeails, PersonalDetails,
     # and OtherDetails. If any of these models do not have the required
     # information, the form should not submit
     def test_post_saves_if_all_submissions_are_valid(self):
         valid_post_data = {}
-        valid_post_data.update(self.valid_user_details_data)
-        valid_post_data.update(self.valid_other_details_data)
-        valid_post_data.update(self.valid_contact_details_data)
-        valid_post_data.update(self.valid_personal_details_data)
+        valid_post_data.update(self.valid_user_data)
+        valid_post_data.update(self.valid_contact_data)
+        valid_post_data.update(self.valid_personal_data)
+        valid_post_data.update(self.valid_wife_data)
+        valid_post_data.update(self.valid_occupation_data)
+        valid_post_data.update(self.valid_hod_data)
+        valid_post_data.update(self.valid_formset_management)
         url = reverse('application.views.post')
         expected_url = reverse('application.views.thank_you')
         response = self.c.post(url, valid_post_data)
         self.assertRedirects(response, expected_url)
 
-    def test_post_fails_if_contact_details_invalid(self):
+    def test_post_fails_if_contact_invalid(self):
         invalid_post_data = {}
-        invalid_post_data.update(self.valid_user_details_data)
-        invalid_post_data.update(self.valid_other_details_data)
-        invalid_post_data.update(self.valid_contact_details_data)
-        invalid_post_data.update(self.valid_personal_details_data)
+        invalid_post_data.update(self.valid_user_data)
+        invalid_post_data.update(self.valid_contact_data)
+        invalid_post_data.update(self.valid_personal_data)
+        invalid_post_data.update(self.valid_wife_data)
+        invalid_post_data.update(self.valid_occupation_data)
+        invalid_post_data.update(self.valid_hod_data)
+        invalid_post_data.update(self.valid_formset_management)
         invalid_post_data['home_address'] = ''
         url = reverse('application.views.post')
         expected_url = reverse('application.views.error')
         response = self.c.post(url, invalid_post_data)
         self.assertRedirects(response, expected_url)
 
-    def test_post_fails_if_personal_details_invalid(self):
+    def test_post_fails_if_personal_invalid(self):
         invalid_post_data = {}
-        invalid_post_data.update(self.valid_user_details_data)
-        invalid_post_data.update(self.valid_other_details_data)
-        invalid_post_data.update(self.valid_contact_details_data)
-        invalid_post_data.update(self.valid_personal_details_data)
+        invalid_post_data.update(self.valid_user_data)
+        invalid_post_data.update(self.valid_contact_data)
+        invalid_post_data.update(self.valid_personal_data)
+        invalid_post_data.update(self.valid_wife_data)
+        invalid_post_data.update(self.valid_occupation_data)
+        invalid_post_data.update(self.valid_hod_data)
+        invalid_post_data.update(self.valid_formset_management)
         invalid_post_data['date_of_birth_year'] = ''
         url = reverse('application.views.post')
         expected_url = reverse('application.views.error')
         response = self.c.post(url, invalid_post_data)
         self.assertRedirects(response, expected_url)
 
-    def test_post_fails_if_user_details_invalid(self):
+    def test_post_fails_if_occupation_invalid(self):
         invalid_post_data = {}
-        invalid_post_data.update(self.valid_user_details_data)
-        invalid_post_data.update(self.valid_other_details_data)
-        invalid_post_data.update(self.valid_contact_details_data)
-        invalid_post_data.update(self.valid_personal_details_data)
-        invalid_post_data['first_name'] = ''
+        invalid_post_data.update(self.valid_user_data)
+        invalid_post_data.update(self.valid_contact_data)
+        invalid_post_data.update(self.valid_personal_data)
+        invalid_post_data.update(self.valid_wife_data)
+        invalid_post_data.update(self.valid_occupation_data)
+        invalid_post_data.update(self.valid_hod_data)
+        invalid_post_data.update(self.valid_formset_management)
+        invalid_post_data['occupation-occupation'] = ''
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.error')
+        response = self.c.post(url, invalid_post_data)
+        self.assertRedirects(response, expected_url)
+    
+    def test_post_fails_if_hod_invalid(self):
+        invalid_post_data = {}
+        invalid_post_data.update(self.valid_user_data)
+        invalid_post_data.update(self.valid_contact_data)
+        invalid_post_data.update(self.valid_personal_data)
+        invalid_post_data.update(self.valid_wife_data)
+        invalid_post_data.update(self.valid_occupation_data)
+        invalid_post_data.update(self.valid_hod_data)
+        invalid_post_data.update(self.valid_formset_management)
+        invalid_post_data['sponsor'] = ''
         url = reverse('application.views.post')
         expected_url = reverse('application.views.error')
         response = self.c.post(url, invalid_post_data)
         self.assertRedirects(response, expected_url)
 
-    def test_post_fails_if_other_details_invalid(self):
-        # there are no required values for validation in this form/model yet
-        pass
+    def test_post_fails_if_user_invalid(self):
+        invalid_post_data = {}
+        invalid_post_data.update(self.valid_user_data)
+        invalid_post_data.update(self.valid_contact_data)
+        invalid_post_data.update(self.valid_personal_data)
+        invalid_post_data.update(self.valid_wife_data)
+        invalid_post_data.update(self.valid_occupation_data)
+        invalid_post_data.update(self.valid_hod_data)
+        invalid_post_data.update(self.valid_formset_management)
+        invalid_post_data['first_name'] = ''
+        url = reverse('application.views.post')
+        expected_url = reverse('application.views.error')
+        response = self.c.post(url, invalid_post_data)
+        self.assertRedirects(response, expected_url)
 
     def test_user_must_be_logged_in_and_staff_to_export_excel(self):
         staff_user = User.objects.create_superuser(
