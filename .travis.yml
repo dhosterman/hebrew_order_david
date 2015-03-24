@@ -15,7 +15,9 @@ deploy:
   provider: heroku
   api_key:
     secure: Hsw2r2E8s4H0VyIeqqJJkIIZg16StP4r3KIs9OD+U5GPhNy5xH4FkUgdBmm1yhMMOkpBK3q1NYe4hyB0HsRO0ac3utg+SAWymaB44gHqJ5bCrlsncUmeOh1vhzJCBHFHAqxQLhijxp5jXXJCgZ+d0OIfEP15Vjy87V4/Qn3D5pA=
-  app: immense-beyond-8311
+  app: 
+    master: hod-shimon-peres
+    development: hod-shimon-peres-staging
   on:
     repo: dhosterman/hebrew_order_david
   run:
