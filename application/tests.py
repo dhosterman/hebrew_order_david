@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.core import mail
 from accounts.models import User
 from .validators import is_valid_tn
+from .notify import on_new_user
 
 
 # Create your tests here.
@@ -260,3 +262,56 @@ class ApplicationViewsTests(TestCase):
         self.c.login(email=staff_user.email, password='test')
         response = self.c.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class NotifyTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser(
+            first_name = 'Steve',
+            last_name = 'Smith',
+            email = 'ssmith@fakeemail.com',
+            password = 'password'
+        )
+
+        self.user.hebrew_name = 'Aaron'
+        self.user.save()
+
+        User.objects.create_superuser(
+            first_name = 'Natasha',
+            last_name = 'Romanov',
+            email = 'natasha@avengers.com',
+            password = 'password'
+        )
+
+    def tearDown(self):
+        pass
+
+    def test_on_new_user_subject_is_correct(self):
+        expected = 'New Application'
+        on_new_user(self.user)
+        result = mail.outbox[0].subject
+        self.assertIn(expected, result)
+
+    def test_on_new_user_sends_proper_number(self):
+        expected = 2
+        on_new_user(self.user)
+        result = len(mail.outbox)
+        self.assertEqual(expected, result)
+
+    def test_on_new_user_body_contains_applicant_name(self):
+        expected = 'Applicant: Steve Smith'
+        on_new_user(self.user)
+        result = str(mail.outbox[0].message())
+        self.assertIn(expected, result)
+
+    def test_on_new_user_body_contains_applicant_email(self):
+        expected = 'Email: ssmith@fakeemail.com'
+        on_new_user(self.user)
+        result = str(mail.outbox[0].message())
+        self.assertIn(expected, result)
+
+    def test_on_new_user_body_contains_appliant_hebrew_name(self):
+        expected = 'Hebrew Name: Aaron'
+        on_new_user(self.user)
+        result = str(mail.outbox[0].message())
+        self.assertIn(expected, result)

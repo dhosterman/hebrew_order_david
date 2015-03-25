@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
 from accounts.models import User
+from application import notify
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
                      UserCommittee, Committee, Legal)
 from .forms import (ContactForm, PersonalForm, WifeForm, OccupationForm,
@@ -283,6 +284,7 @@ def post(request):
         message += "and the password: "
         message += password
         user_instance.email_user('Welcome!', message)
+        notify.on_new_user(user_instance)
         return redirect('application.views.thank_you')
 
     else:
