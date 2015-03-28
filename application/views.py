@@ -96,7 +96,8 @@ def show(request):
         'children_formset': children_formset,
         'desired_committees_form': DesiredCommitteesForm(),
         'pills': 'active',
-        'data_toggle': 'tab' 
+        'data_toggle': 'tab',
+        'legal': Legal.objects.first()
     })
 
 
