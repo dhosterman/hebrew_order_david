@@ -7,6 +7,7 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
+from django.forms.extras.widgets import SelectDateWidget
 from accounts.models import User
 from application import notify
 from .models import (Contact, Personal, Wife, Occupation, Children, Hod,
@@ -67,7 +68,8 @@ def show(request):
     except ObjectDoesNotExist:
         hod = Hod(user=user)
     ChildrenFormset = modelformset_factory(Children, extra=0, can_delete=True,
-                                           exclude=['user'])
+                                           exclude=['user'],
+                                           widgets={'date_of_birth': SelectDateWidget()})
     children = user.children_set.all().values()
     CurrentCommitteesFormset = modelformset_factory(UserCommittee,
                                                     extra=0, can_delete=True,
@@ -98,6 +100,7 @@ def show(request):
 @transaction.atomic
 def update(request):
     user_instance = request.user
+    updated_forms = []
     try:
         contact_instance = user_instance.contact
     except ObjectDoesNotExist:
@@ -120,44 +123,53 @@ def update(request):
         hod_instance = Hod(user=request.user)
 
     user = UserForm(request.POST, instance=user_instance)
-    if user.is_valid():
+    if user.is_valid() and user.changed_data:
+        updated_forms.append(user)
         user.save()
 
     contact = ContactForm(request.POST, instance=contact_instance)
-    if contact.is_valid():
+    if contact.is_valid() and contact.changed_data:
+        updated_forms.append(contact)
         contact.save()
     else:
         print(contact.errors)
 
     personal = PersonalForm(request.POST, instance=personal_instance)
-    if personal.is_valid():
+    if personal.is_valid() and personal.changed_data:
+        updated_forms.append(personal)
         personal.save()
 
     wife = WifeForm(request.POST, instance=wife_instance, prefix='wife')
-    if wife.is_valid():
+    if wife.is_valid() and wife.changed_data:
+        updated_forms.append(wife)
         wife.save()
     
     occupation = OccupationForm(request.POST, instance=occupation_instance,
                                 prefix='occupation')
-    if occupation.is_valid():
+    if occupation.is_valid() and occupation.changed_data:
+        updated_forms.append(occupation)
         occupation.save()
     
     hod = HodForm(request.POST, instance=hod_instance)
-    if hod.is_valid():
+    if hod.is_valid() and hod.changed_data:
+        updated_forms.append(hod)
         hod.save()
 
     ChildrenFormset = modelformset_factory(Children, exclude=['user'],
-                                           can_delete=True)
+                                           can_delete=True,
+                                           widgets={'date_of_birth': SelectDateWidget()})
     children_formset = ChildrenFormset(request.POST, prefix='children')
     if children_formset.is_valid():
         for child in children_formset:
-            if child not in children_formset.deleted_forms:
+            if child not in children_formset.deleted_forms and child.changed_data:
+                updated_forms.append(child)
                 child_instance = child.save(commit=False)
                 child_instance.user = user_instance
                 child_instance.save()
         for child in children_formset.deleted_forms:
             child_instance = child.save(commit=False)
-            child_instance.delete()
+            if child_instance.id:
+                child_instance.delete()
     else:
         print(children_formset.errors)
         
@@ -168,16 +180,20 @@ def update(request):
                                                   prefix='committees')
     if committees_formset.is_valid():
         for committee in committees_formset:
-            if committee not in committees_formset.deleted_forms:
+            if committee not in committees_formset.deleted_forms and committee.changed_data:
+                updated_forms.append(committee)
                 committee_instance = committee.save(commit=False)
                 committee_instance.user = user_instance
                 committee_instance.current = True
                 committee_instance.save()
         for committee in committees_formset.deleted_forms:
             committee_instance = committee.save(commit=False)
-            committee_instance.delete()
+            if committee_instance.id:
+                committee_instance.delete()
     else:
         print(committees_formset.errors)
+
+    notify.on_updated_user(user_instance, updated_forms)
     return redirect('application.views.thank_you')
 
 
