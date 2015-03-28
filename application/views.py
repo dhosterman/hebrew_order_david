@@ -67,9 +67,13 @@ def show(request):
         hod = user.hod
     except ObjectDoesNotExist:
         hod = Hod(user=user)
+
+    
+    years = [year for year in range(this_year + 1, this_year - 100, -1)]
+    widgets = {'date_of_birth': SelectDateWidget(years=years)}
     ChildrenFormset = modelformset_factory(Children, extra=0, can_delete=True,
                                            exclude=['user'],
-                                           widgets={'date_of_birth': SelectDateWidget()})
+                                           widgets=widgets)
     children = user.children_set.all().values()
     CurrentCommitteesFormset = modelformset_factory(UserCommittee,
                                                     extra=0, can_delete=True,
@@ -156,8 +160,7 @@ def update(request):
         hod.save()
 
     ChildrenFormset = modelformset_factory(Children, exclude=['user'],
-                                           can_delete=True,
-                                           widgets={'date_of_birth': SelectDateWidget()})
+                                           can_delete=True)
     children_formset = ChildrenFormset(request.POST, prefix='children')
     if children_formset.is_valid():
         for child in children_formset:
