@@ -23,6 +23,8 @@ def on_updated_user(user, forms):
             message += '[{}]\r\n'.format(form.prefix)
         for key in form.changed_data:
             old_value = form.initial.get(key, 'blank')
+            if old_value == '':
+                old_value = 'blank'
             new_value = form.cleaned_data.get(key, 'blank')
             label = form.fields[key].label
             message += '* {}: changed from {} to {}\r\n'.format(label,
