@@ -138,8 +138,9 @@ $(document).ready(function () {
 
 
       // test user email address to make sure it doesn't match existing email address
+      // but only on a new form, not on the show page
       var email = $('#id_email');
-      if (scope === 'all' || email.is(':visible')) {
+      if (window.location.pathname !== '/application/show/' && (scope === 'all' || email.is(':visible'))) {
         $.ajax({
           url: '/accounts/existing_user',
           data: {email: email.val()},
