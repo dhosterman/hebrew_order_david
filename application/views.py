@@ -159,8 +159,12 @@ def update(request):
         updated_forms.append(hod)
         hod.save()
 
+    this_year = datetime.datetime.now().year
+    years = [year for year in range(this_year + 1, this_year - 100, -1)]
+    widgets = {'date_of_birth': SelectDateWidget(years=years)}
     ChildrenFormset = modelformset_factory(Children, exclude=['user'],
-                                           can_delete=True)
+                                           can_delete=True,
+                                           widgets=widgets)
     children_formset = ChildrenFormset(request.POST, prefix='children')
     if children_formset.is_valid():
         for child in children_formset:
