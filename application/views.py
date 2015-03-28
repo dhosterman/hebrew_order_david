@@ -68,7 +68,7 @@ def show(request):
     except ObjectDoesNotExist:
         hod = Hod(user=user)
 
-    
+    this_year = datetime.datetime.now().year
     years = [year for year in range(this_year + 1, this_year - 100, -1)]
     widgets = {'date_of_birth': SelectDateWidget(years=years)}
     ChildrenFormset = modelformset_factory(Children, extra=0, can_delete=True,
