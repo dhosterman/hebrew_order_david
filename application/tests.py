@@ -2,8 +2,9 @@ from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.core import mail
 from accounts.models import User
+from application.forms import UserForm
 from .validators import is_valid_tn
-from .notify import on_new_user
+from .notify import on_new_user, on_updated_user
 
 
 # Create your tests here.
@@ -313,5 +314,31 @@ class NotifyTests(TestCase):
     def test_on_new_user_body_contains_appliant_hebrew_name(self):
         expected = 'Hebrew Name: Aaron'
         on_new_user(self.user)
+        result = str(mail.outbox[0].message())
+        self.assertIn(expected, result)
+
+    def test_on_update_user_subject_is_correct(self):
+        expected = 'Updated Application'
+        on_updated_user(self.user, [])
+        result = mail.outbox[0].subject
+        self.assertIn(expected, result)
+
+    def test_on_update_user_body_contains_applicant_name(self):
+        expected = 'Applicant: Steve Smith'
+        on_updated_user(self.user, [])
+        result = str(mail.outbox[0].message())
+        self.assertIn(expected, result)
+
+    def test_on_update_body_contains_changed_field_names(self):
+        post = {
+            'first_name': 'Steve',
+            'last_name': 'Smith',
+            'email': 'ssmith@fakeemail.com',
+            'hebrew_name': 'David'
+        }
+        form = UserForm(post, instance=self.user)
+        form.is_valid()
+        expected = '* Hebrew name: changed from Aaron to David'
+        on_updated_user(self.user, [form])
         result = str(mail.outbox[0].message())
         self.assertIn(expected, result)
